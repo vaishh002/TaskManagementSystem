@@ -200,8 +200,8 @@ const Login = () => {
                 </button>
               </motion.div>
 
-              <AnimatePresence>
-                {role === 'admin' && (
+              {/* <AnimatePresence> */}
+                {/* {role === 'admin' && (
                   <motion.div 
                     initial={{ height: 0, opacity: 0, y: -20 }}
                     animate={{ height: "auto", opacity: 1, y: 0 }}
@@ -221,7 +221,7 @@ const Login = () => {
                     />
                   </motion.div>
                 )}
-              </AnimatePresence>
+              </AnimatePresence> */}
             </div>
 
             <motion.div variants={itemVariants} className="flex items-center justify-between py-2">
