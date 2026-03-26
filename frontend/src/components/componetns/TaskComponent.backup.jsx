@@ -16,9 +16,8 @@ import {
   FiSearch,
   FiEye,
   FiLock,
-  FiFileText,
 } from 'react-icons/fi';
-import { createProjectTask, getProjectTask, updateProjectTask, getTaskReports, submitTaskReport } from '../../api/index';
+import { createProjectTask, getProjectTask } from '../../api/index';
 import { AiFillCrown } from 'react-icons/ai';
 
 // Task Status Constants
@@ -44,7 +43,7 @@ const STATUS_ICONS = {
 };
 
 // Task Card Component
-const TaskCard = ({ task, onEdit, onDelete, onStatusChange, canEdit, onViewReports }) => {
+const TaskCard = ({ task, onEdit, onDelete, onStatusChange, canEdit }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -139,153 +138,8 @@ const TaskCard = ({ task, onEdit, onDelete, onStatusChange, canEdit, onViewRepor
             </div>
           </div>
         )}
-
-        {/* View/Submit Reports Button */}
-        <div className="mt-3 pt-3 border-t border-blue-50">
-          <button
-            onClick={() => onViewReports(task)}
-            className="w-full flex items-center justify-center gap-2 py-2.5 bg-gradient-to-r from-blue-50 to-indigo-50 text-indigo-600 rounded-xl hover:from-blue-100 hover:to-indigo-100 transition-all duration-200 text-sm font-semibold"
-          >
-            <FiFileText size={16} />
-            Daily Reports
-          </button>
-        </div>
       </div>
     </motion.div>
-  );
-};
-
-// Reports Modal
-const ReportsModal = ({ isOpen, onClose, task }) => {
-  const [reports, setReports] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [newReport, setNewReport] = useState('');
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    if (isOpen && task) {
-      loadReports();
-    }
-  }, [isOpen, task]);
-
-  const loadReports = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await getTaskReports({ taskId: task._id });
-      setReports(response?.data?.data || response?.data || []);
-    } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Failed to load reports');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!newReport.trim()) return;
-
-    setSubmitting(true);
-    setError(null);
-    try {
-      const response = await submitTaskReport({ taskId: task._id, reportText: newReport });
-      const addedReport = response?.data?.data || response?.data;
-      if (addedReport) {
-         setReports(prev => [addedReport, ...prev]);
-      }
-      setNewReport('');
-    } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Failed to submit report');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 bg-blue-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col border border-blue-100"
-      >
-        <div className="flex items-center justify-between p-5 border-b border-blue-100 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-t-2xl">
-          <div>
-            <h3 className="text-xl font-bold text-indigo-900 flex items-center gap-2">
-              <FiFileText /> Task Reports
-            </h3>
-            <p className="text-sm text-indigo-700 mt-1 line-clamp-1">{task?.description}</p>
-          </div>
-          <button onClick={onClose} className="p-2 hover:bg-black/5 rounded-xl transition-all">
-            <FiX size={20} className="text-indigo-900" />
-          </button>
-        </div>
-
-        <div className="flex-1 overflow-y-auto p-5 custom-scrollbar">
-          {error && (
-            <div className="mb-4 p-3 bg-rose-50 border border-rose-200 rounded-xl text-rose-600 text-sm flex items-center gap-2">
-              <FiAlertCircle /> {error}
-            </div>
-          )}
-
-          <div className="space-y-4">
-            {loading ? (
-              <div className="flex items-center justify-center py-10">
-                <FiLoader className="animate-spin text-indigo-600 w-8 h-8" />
-              </div>
-            ) : reports.length === 0 ? (
-              <div className="text-center py-10 text-gray-500">
-                <FiMessageSquare className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                <p>No reports found for this task.</p>
-              </div>
-            ) : (
-              reports.map((report) => (
-                <div key={report._id} className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2 font-medium text-indigo-900 text-sm">
-                      <div className="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700">
-                        {report.memberId?.name?.charAt(0) || 'U'}
-                      </div>
-                      {report.memberId?.name || 'Unknown User'}
-                    </div>
-                    <span className="text-xs text-gray-400">
-                      {new Date(report.date || report.createdAt).toLocaleString()}
-                    </span>
-                  </div>
-                  <p className="text-gray-700 text-sm whitespace-pre-wrap pl-8">{report.reportText}</p>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-
-        <div className="p-5 border-t border-blue-100 bg-gray-50 rounded-b-2xl">
-          <form onSubmit={handleSubmit} className="flex gap-3">
-            <textarea
-              value={newReport}
-              onChange={(e) => setNewReport(e.target.value)}
-              placeholder="Write your daily report..."
-              rows="2"
-              required
-              className="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none text-sm"
-            />
-            <button
-              type="submit"
-              disabled={submitting}
-              className="px-6 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white rounded-xl hover:from-indigo-700 hover:to-indigo-800 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed shadow-sm flex items-center gap-2"
-            >
-              {submitting ? <FiLoader className="animate-spin" /> : 'Submit'}
-            </button>
-          </form>
-          <p className="text-xs text-gray-500 mt-2">
-            Only the assigned Team Member can successfully submit a report.
-          </p>
-        </div>
-      </motion.div>
-    </div>
   );
 };
 
@@ -514,10 +368,6 @@ const TaskComponent = ({ projectId, members, currentUserRole }) => {
   const [formLoading, setFormLoading] = useState(false);
   const [filter, setFilter] = useState('ALL');
   const [searchTerm, setSearchTerm] = useState('');
-  
-  // New States for Reports
-  const [showReportsModal, setShowReportsModal] = useState(false);
-  const [selectedTaskForReports, setSelectedTaskForReports] = useState(null);
 
   // Only Team Leaders can edit/create tasks
   const canEdit = currentUserRole === 'TEAM_LEADER';
@@ -567,47 +417,30 @@ const TaskComponent = ({ projectId, members, currentUserRole }) => {
     }
   };
 
-  // Update task
+  // Update task (local only)
   const handleUpdateTask = async (taskData) => {
     if (!canEdit) {
       setShowAccessDenied(true);
       return;
     }
 
-    setFormLoading(true);
-    try {
-      const payload = { ...taskData, taskId: editingTask._id };
-      await updateProjectTask(payload);
-      
-      setTasks(prev => prev.map(task =>
-        task._id === editingTask._id ? { ...task, ...taskData } : task
-      ));
-      setEditingTask(null);
-      setShowForm(false);
-    } catch(err) {
-      console.error("Failed to update task", err);
-      setError(err.response?.data?.message || err.message || 'Failed to update task');
-    } finally {
-      setFormLoading(false);
-    }
+    setTasks(prev => prev.map(task =>
+      task._id === editingTask._id ? { ...task, ...taskData } : task
+    ));
+    setEditingTask(null);
+    setShowForm(false);
   };
 
-  // Update task status
+  // Update task status (local only)
   const handleStatusChange = async (taskId, newStatus) => {
     if (!canEdit) {
       setShowAccessDenied(true);
       return;
     }
 
-    try {
-      await updateProjectTask({ taskId, status: newStatus });
-      setTasks(prev => prev.map(t =>
-        t._id === taskId ? { ...t, status: newStatus } : t
-      ));
-    } catch (err) {
-      console.error("Failed to update task status", err);
-      setError(err.response?.data?.message || err.message || 'Failed to update task status');
-    }
+    setTasks(prev => prev.map(t =>
+      t._id === taskId ? { ...t, status: newStatus } : t
+    ));
   };
 
   // Delete task (local only)
@@ -792,10 +625,6 @@ const TaskComponent = ({ projectId, members, currentUserRole }) => {
                 onDelete={handleDeleteTask}
                 onStatusChange={handleStatusChange}
                 canEdit={canEdit}
-                onViewReports={(task) => {
-                  setSelectedTaskForReports(task);
-                  setShowReportsModal(true);
-                }}
               />
             ))}
           </AnimatePresence>
@@ -821,16 +650,6 @@ const TaskComponent = ({ projectId, members, currentUserRole }) => {
       <AccessDeniedModal
         isOpen={showAccessDenied}
         onClose={() => setShowAccessDenied(false)}
-      />
-
-      {/* Reports Modal */}
-      <ReportsModal
-        isOpen={showReportsModal}
-        onClose={() => {
-          setShowReportsModal(false);
-          setSelectedTaskForReports(null);
-        }}
-        task={selectedTaskForReports}
       />
     </div>
   );

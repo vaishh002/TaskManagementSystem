@@ -110,7 +110,7 @@ const acceptInvite = asyncHandler(async (req, res) => {
 
     // Inject User into Workspace as "MEMBER" (or whatever was designated, e.g., "MANAGER")
     // Note: If the invite is for a project (e.g. TEAM_MEMBER), the parent workspace role defaults to "MEMBER"
-    const workspaceRole = (inviteRecord.role === "TEAM_MEMBER" || inviteRecord.role === "TEAM_LEAD") ? "MEMBER" : inviteRecord.role;
+    const workspaceRole = (inviteRecord.role === "TEAM_MEMBER" || inviteRecord.role === "TEAM_LEAD" || inviteRecord.role === "INTERN") ? "MEMBER" : inviteRecord.role;
 
     const existingWorkspaceMember = workspace.members.find(m => m.user.toString() === user._id.toString());
     if (!existingWorkspaceMember) {

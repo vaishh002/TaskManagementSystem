@@ -44,10 +44,10 @@ const verifyWorkspaceMember = asyncHandler(async(req, res, next) => {
 
   console.log("req.body",req.body)
 
-    const workspaceId = req.header("x-workspace-id") || req.body?.workspaceId || req.params
-
+    const workspaceId = req.header("x-workspace-id") || req.body?.workspaceId || req.params?.workspaceId;
+    
     if(!workspaceId) {
-        throw new ApiError(400, "Workspace ID is required in headers.");
+        throw new ApiError(400, "Workspace ID is required in headers or body.");
     }
 
     if(req.user.isSuperuser) return next();
@@ -69,9 +69,9 @@ const verifyWorkspaceAdmin = asyncHandler(async(req, res, next) => {
 
       console.log("req.body",req.body)
 
-    const workspaceId = req.header("x-workspace-id") || req.body.workspaceId
+    const workspaceId = req.header("x-workspace-id") || req.body?.workspaceId || req.params?.workspaceId;
     if(!workspaceId) {
-        throw new ApiError(400, "Workspace ID is required in headers.");
+        throw new ApiError(400, "Workspace ID is required in headers or body.");
     }
 
     if(req.user.isSuperuser) return next();

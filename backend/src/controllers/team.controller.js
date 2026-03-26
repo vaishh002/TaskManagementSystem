@@ -6,6 +6,7 @@ import Workspace from '../models/workspace.model.js';
 import ApiError from '../utils/ApiError.js';
 import ApiResponse from '../utils/ApiResponse.js';
 import asyncHandler from '../utils/asyncHandler.js';
+import { checkWorkspaceRole } from '../utils/checkWorkspaceRole.js';
 
 // create team
 const createTeam= asyncHandler(async(req,res)=>{
@@ -13,6 +14,8 @@ const createTeam= asyncHandler(async(req,res)=>{
       const { projectId, teamName, team, teamLeaderId ,workSpaceId} = req.body
       console.log(req.body);
 
+      const isAuthorized = await checkWorkspaceRole(req, workSpaceId);
+      if(!isAuthorized) throw new ApiError(403, "Not authorized to create a team");
 
       const project = await Project.findById(projectId)
 
@@ -55,9 +58,11 @@ const getTeams = asyncHandler(async (req, res) => {
             throw new ApiError(404, "Workspace not found");
           }
 
-          const teams = await Team.find({ workspaceId });
+          const teams = await Team.find({ workspaceId })
+            .populate("team", "name email avatar")
+            .populate("teamLeader", "name email avatar");
 
-          console.log("teams",teams);
+          console.log("teams", teams);
 
 
           const isUserInAnyTeam = await teams.map((team) =>
@@ -91,6 +96,9 @@ const addNewMember = asyncHandler(async(req,res)=>{
             return res.status(404).json({ error: "Team not found" });
           }
 
+          const isAuthorized = await checkWorkspaceRole(req, team.workspaceId);
+          if(!isAuthorized) throw new ApiError(403, "Not authorized to modify this team");
+
 
           const user = await User.findOne({ _id: newMemberId }).select("_id");
           if (!user) {
@@ -116,13 +124,18 @@ const removeTeamMember = asyncHandler(async(req,res)=>{
     const { userId } = req.body
 
     const team = await Team.findById(teamId)
+    if (!team) throw new ApiError(404, "Team not found");
+
+    const isAuthorized = await checkWorkspaceRole(req, team.workspaceId);
+    if(!isAuthorized) throw new ApiError(403, "Not authorized to modify this team");
+
     const user = await User.findById(userId).select("_id")
 
     await Team.findByIdAndUpdate(team._id, {
         $pull : {
           team : user._id
         }
-    }, {save : true})
+    }, { new : true })
 
     return res.status(200).json(new ApiResponse(200, {}, "remove user from team successfully"))
 })
@@ -138,6 +151,9 @@ const setNewTeamLeader = asyncHandler(async(req,res)=>{
           if (!team) {
             return res.status(404).json({ error: "Team not found" });
           }
+
+          const isAuthorized = await checkWorkspaceRole(req, team.workspaceId);
+          if(!isAuthorized) throw new ApiError(403, "Not authorized to modify this team");
 
 
           const NewTeamLeader = await User.findOne({ _id: NewTeamLeaderId }).select("_id");
@@ -173,6 +189,9 @@ const removeTeamLeaderAndAddToTeam = asyncHandler(async(req,res)=>{
             throw new ApiError(400,"Team not found")
           }
 
+          const isAuthorized = await checkWorkspaceRole(req, team.workspaceId);
+          if(!isAuthorized) throw new ApiError(403, "Not authorized to modify this team");
+
 
           const teamLeader = await User.findOne({ _id: teamLeaderId }).select("_id");
           if (!teamLeader) {
@@ -201,6 +220,9 @@ const updateTeam = asyncHandler(async(req,res)=>{
     throw new ApiError(404, "Team not found");
   }
 
+  const isAuthorized = await checkWorkspaceRole(req, existingTeam.workspaceId);
+  if(!isAuthorized) throw new ApiError(403, "Not authorized to modify this team");
+
   if(teamLeaderId && String(existingTeam.teamLeader) !== String(teamLeaderId)) {
     if(existingTeam.teamLeader) {
        await User.findByIdAndUpdate(existingTeam.teamLeader, { $set: { role: "intern" }});
@@ -217,7 +239,23 @@ const updateTeam = asyncHandler(async(req,res)=>{
   return res.status(200).json(new ApiResponse(200, updatedTeam, "Team updated successfully"));
 })
 
+// delete team
+const deleteTeam = asyncHandler(async (req, res) => {
+  const { teamId } = req.params;
+
+  const team = await Team.findById(teamId);
+  if (!team) throw new ApiError(404, "Team not found");
+
+  const isAuthorized = await checkWorkspaceRole(req, team.workspaceId);
+  if (!isAuthorized) throw new ApiError(403, "Not authorized to delete this team");
+
+  await Team.findByIdAndDelete(teamId);
+
+  return res.status(200).json(new ApiResponse(200, {}, "Team deleted successfully"));
+});
+
 export {
   addNewMember, createTeam,
-  getTeams, removeTeamLeaderAndAddToTeam, removeTeamMember, setNewTeamLeader, updateTeam
+  getTeams, removeTeamLeaderAndAddToTeam, removeTeamMember, setNewTeamLeader, updateTeam,
+  deleteTeam
 };

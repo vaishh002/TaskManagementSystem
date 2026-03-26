@@ -126,4 +126,73 @@ const addWorkspaceManager = asyncHandler(async (req, res) => {
     return res.status(200).json(new ApiResponse(200, workspace, "User added as Workspace Manager successfully"));
 });
 
-export { createWorkspace, getWorkspaces, getWorkspaceById, addWorkspaceManager };
+const inviteUserToWorkspace = asyncHandler(async (req, res) => {
+    const { workspaceId } = req.params;
+    const { userId, role } = req.body;
+
+    if (!userId) {
+        throw new ApiError(400, "User ID is required");
+    }
+
+    const workspace = await Workspace.findById(workspaceId);
+    if (!workspace) {
+        throw new ApiError(404, "Workspace not found");
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+        throw new ApiError(404, "User not found in the global pool");
+    }
+
+    // Check if user is already a member
+    const existingMemberIndex = workspace.members.findIndex(
+        (member) => member.user.toString() === userId.toString()
+    );
+
+    const newRole = role || "MEMBER";
+
+    if (existingMemberIndex !== -1) {
+        workspace.members[existingMemberIndex].role = newRole;
+    } else {
+        workspace.members.push({
+            user: userId,
+            role: newRole
+        });
+    }
+
+    await workspace.save();
+
+    return res.status(200).json(new ApiResponse(200, workspace, "User added to Workspace successfully"));
+});
+
+const updateWorkspaceMemberRole = asyncHandler(async (req, res) => {
+    const { workspaceId, userId } = req.params;
+    const { role } = req.body;
+
+    if (!role) throw new ApiError(400, "Role is required");
+
+    const workspace = await Workspace.findById(workspaceId);
+    if (!workspace) throw new ApiError(404, "Workspace not found");
+
+    const memberIndex = workspace.members.findIndex(m => m.user.toString() === userId.toString());
+    if (memberIndex === -1) throw new ApiError(404, "Member not found in workspace");
+
+    workspace.members[memberIndex].role = role.toUpperCase();
+    await workspace.save();
+
+    return res.status(200).json(new ApiResponse(200, workspace, "Member role updated successfully"));
+});
+
+const removeWorkspaceMember = asyncHandler(async (req, res) => {
+    const { workspaceId, userId } = req.params;
+
+    const workspace = await Workspace.findById(workspaceId);
+    if (!workspace) throw new ApiError(404, "Workspace not found");
+
+    workspace.members = workspace.members.filter(m => m.user.toString() !== userId.toString());
+    await workspace.save();
+
+    return res.status(200).json(new ApiResponse(200, workspace, "Member removed from workspace successfully"));
+});
+
+export { createWorkspace, getWorkspaces, getWorkspaceById, addWorkspaceManager, inviteUserToWorkspace, updateWorkspaceMemberRole, removeWorkspaceMember };

@@ -27,6 +27,7 @@ import userRouter from './routes/user.route.js'
 import workspaceRouter from './routes/workspace.route.js'
 import inviteRouter from './routes/inviteToken.route.js'
 import teamRouter from './routes/team.route.js'
+import reportRouter from './routes/report.route.js'
 
 // ======================================================
 // handle routes
@@ -38,6 +39,7 @@ app.use("/api/v1/tms/user", userRouter)
 app.use("/api/v1/tms/workspace", workspaceRouter)
 app.use("/api/v1/tms/invite", inviteRouter)
 app.use("/api/v1/tms/team", teamRouter)
+app.use("/api/v1/tms/report", reportRouter)
 
 // ======================================================
 // global error handler

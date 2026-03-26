@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { createWorkspace, getWorkspaces, getWorkspaceById, addWorkspaceManager } from "../controllers/workspace.controller.js";
-import { verifyJWT, verifySuperuser } from "../middlewares/auth.middleware.js";
+import { createWorkspace, getWorkspaces, getWorkspaceById, addWorkspaceManager, inviteUserToWorkspace, updateWorkspaceMemberRole, removeWorkspaceMember } from "../controllers/workspace.controller.js";
+import { verifyJWT, verifySuperuser, verifyWorkspaceAdmin } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
@@ -8,6 +8,11 @@ const router = Router();
 router.route("/create").post(verifyJWT, verifySuperuser, createWorkspace);
 
 router.route("/add-manager/:workspaceId").post(verifyJWT, addWorkspaceManager);
+router.route("/invite-user/:workspaceId").post(verifyJWT, inviteUserToWorkspace);
+
+// Member Management
+router.route("/:workspaceId/role/:userId").patch(verifyJWT, verifyWorkspaceAdmin, updateWorkspaceMemberRole);
+router.route("/:workspaceId/member/:userId").delete(verifyJWT, verifyWorkspaceAdmin, removeWorkspaceMember);
 
 // Routes for all authenticated users
 router.route("/all").get(verifyJWT, getWorkspaces);
