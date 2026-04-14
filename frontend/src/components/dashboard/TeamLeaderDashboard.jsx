@@ -8,7 +8,7 @@ import {
   FiAward, FiTarget, FiActivity, FiBriefcase, FiLoader,
   FiEdit2, FiSave, FiCamera, FiLock, FiPhone, FiShield, FiMail, FiTrash2
 } from 'react-icons/fi';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from "../../context/AuthContext";
 import { requestHandler } from '../../utils';
 import {
   getTeams,

@@ -16,8 +16,7 @@ import {
   HiOutlineSparkles
 } from 'react-icons/hi'
 import { Athenura_Title_Image } from '../../assets'
-
-import {useAuth} from '../../context/AuthContext'
+import { useAuth } from '../../context/AuthContext'
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -80,28 +79,39 @@ const Navbar = () => {
   }
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-      isScrolled
-        ? 'bg-white/98 backdrop-blur-md shadow-xl border-b border-gray-100'
-        : 'bg-gradient-to-b from-white/80 to-transparent backdrop-blur-sm'
-    }`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav 
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        isScrolled
+          ? 'bg-white/95 backdrop-blur-lg shadow-lg border-b border-[#E7DBEF]'
+          : 'bg-transparent'
+      }`}
+    >
+      <div className="w-full px-6 lg:px-12">
         <div className="flex justify-between items-center h-20">
           {/* Left side - Logo and brand */}
           <Link to="/" className="flex items-center space-x-3 group cursor-pointer">
             <div className="relative">
-              {/*  */}
-                <img
-                  src={Athenura_Title_Image}
-                  alt="Logo"
-                  className="w-15 h-15 rounded-xl"
-                />
+              <img
+                src={Athenura_Title_Image}
+                alt="Logo"
+                className="w-15 h-15 rounded-xl"
+              />
             </div>
             <div className="flex flex-col">
-<span className="text-xl font-bold bg-linear-to-r from-blue-500 via-blue-700 to-black [background-size:200%_200%] animate-gradient bg-clip-text text-transparent">
-  TMS
-</span>
-              <span className="text-[10px] tracking-wider text-black font-medium">
+              <span 
+                className={`text-xl font-bold transition-all duration-500 ${
+                  isScrolled 
+                    ? 'bg-gradient-to-r from-[#49225B] via-[#6E3482] to-[#A56ABD] bg-clip-text text-transparent' 
+                    : 'text-white drop-shadow-lg'
+                }`}
+              >
+                TMS
+              </span>
+              <span 
+                className={`text-[10px] tracking-wider font-medium transition-all duration-500 ${
+                  isScrolled ? 'text-[#6E3482]' : 'text-white/90 drop-shadow-md'
+                }`}
+              >
                 Task Management System
               </span>
             </div>
@@ -117,18 +127,27 @@ const Navbar = () => {
                 <Link
                   key={link.id}
                   to={link.path}
-                  className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 group ${
-                    isActive
-                      ? 'text-blue-600 bg-blue-50/80'
-                      : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50/80'
+                  className={`relative px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 group ${
+                    isScrolled
+                      ? isActive
+                        ? 'text-[#49225B] bg-[#F5EBFA]'
+                        : 'text-[#6E3482] hover:text-[#49225B] hover:bg-[#F5EBFA]/50'
+                      : isActive
+                        ? 'text-white bg-white/20 backdrop-blur-sm'
+                        : 'text-white/90 hover:text-white hover:bg-white/10 backdrop-blur-sm'
                   }`}
                 >
                   <span className="flex items-center space-x-2">
-                    <Icon className={`w-4 h-4 transition-transform duration-300 group-hover:scale-110 ${
-                      isActive ? 'text-blue-500' : 'text-gray-400 group-hover:text-blue-400'
-                    }`} />
+                    <Icon className={`w-4 h-4 transition-transform duration-300 group-hover:scale-110`} />
                     <span>{link.label}</span>
                   </span>
+                  {isActive && (
+                    <span 
+                      className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1/2 h-0.5 rounded-full ${
+                        isScrolled ? 'bg-gradient-to-r from-[#6E3482] to-[#A56ABD]' : 'bg-white'
+                      }`}
+                    ></span>
+                  )}
                 </Link>
               )
             })}
@@ -138,9 +157,15 @@ const Navbar = () => {
           <div className="flex items-center space-x-4">
             {/* Notification icon - only show when logged in */}
             {user && (
-              <button className="relative p-2 text-gray-500 hover:text-blue-600 hover:bg-gray-50 rounded-full transition-all duration-300 group">
+              <button 
+                className={`relative p-2 rounded-full transition-all duration-300 group ${
+                  isScrolled 
+                    ? 'text-[#6E3482] hover:text-[#49225B] hover:bg-[#F5EBFA]' 
+                    : 'text-white hover:bg-white/10'
+                }`}
+              >
                 <HiOutlineBell className="w-5 h-5" />
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-gradient-to-r from-red-400 to-red-500 rounded-full border-2 border-white"></span>
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-gradient-to-r from-[#A56ABD] to-[#6E3482] rounded-full border-2 border-white"></span>
               </button>
             )}
 
@@ -150,22 +175,30 @@ const Navbar = () => {
               <div className="relative user-menu">
                 <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="flex items-center space-x-2 px-2 py-1.5 rounded-full hover:bg-gray-50 transition-all duration-300 group border border-transparent hover:border-gray-200"
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-full transition-all duration-300 group border ${
+                    isScrolled
+                      ? 'hover:bg-[#F5EBFA] border-transparent hover:border-[#E7DBEF]'
+                      : 'hover:bg-white/10 border-transparent hover:border-white/20'
+                  }`}
                 >
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center text-white text-sm font-semibold shadow-md">
+                  <div className="w-9 h-9 rounded-full bg-gradient-to-r from-[#49225B] via-[#6E3482] to-[#A56ABD] flex items-center justify-center text-white text-sm font-semibold shadow-lg">
                     {user.avatar ? (
                       <img src={user.avatar} alt={user.name} className="w-full h-full rounded-full object-cover" />
                     ) : (
                       <span>{user.name?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase() || 'U'}</span>
                     )}
                   </div>
-                  <span className="text-sm font-medium text-gray-700 hidden lg:block">
+                  <span 
+                    className={`text-sm font-medium hidden lg:block transition-colors duration-300 ${
+                      isScrolled ? 'text-[#49225B]' : 'text-white'
+                    }`}
+                  >
                     {user.name?.split(' ')[0] || 'User'}
                   </span>
                   <svg
-                    className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-300 ${
-                      isUserMenuOpen ? 'rotate-180' : ''
-                    }`}
+                    className={`w-3.5 h-3.5 transition-all duration-300 ${
+                      isScrolled ? 'text-[#6E3482]' : 'text-white/80'
+                    } ${isUserMenuOpen ? 'rotate-180' : ''}`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -176,10 +209,10 @@ const Navbar = () => {
 
                 {/* User dropdown menu */}
                 {isUserMenuOpen && (
-                  <div className="absolute right-0 mt-3 w-72 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 animate-fadeInDown overflow-hidden">
-                    <div className="px-4 py-4 border-b border-gray-100 bg-gradient-to-r from-blue-50/30 to-transparent">
+                  <div className="absolute right-0 mt-3 w-72 bg-white rounded-2xl shadow-2xl border border-[#E7DBEF] py-2 animate-fadeInDown overflow-hidden">
+                    <div className="px-4 py-4 border-b border-[#E7DBEF] bg-gradient-to-r from-[#F5EBFA] to-transparent">
                       <div className="flex items-center space-x-3">
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center text-white text-lg font-semibold shadow-md">
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-r from-[#49225B] via-[#6E3482] to-[#A56ABD] flex items-center justify-center text-white text-lg font-semibold shadow-md">
                           {user.avatar ? (
                             <img src={user.avatar} alt={user.name} className="w-full h-full rounded-full object-cover" />
                           ) : (
@@ -187,15 +220,15 @@ const Navbar = () => {
                           )}
                         </div>
                         <div className="flex-1">
-                          <p className="text-sm font-semibold text-gray-900">{user.name || 'User'}</p>
-                          <p className="text-xs text-gray-500 mt-0.5">{user.email}</p>
+                          <p className="text-sm font-semibold text-[#49225B]">{user.name || 'User'}</p>
+                          <p className="text-xs text-[#6E3482] mt-0.5">{user.email}</p>
                         </div>
                       </div>
                     </div>
 
                     <Link
                       to="/profile"
-                      className="flex items-center space-x-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors"
+                      className="flex items-center space-x-3 px-4 py-2.5 text-sm text-[#6E3482] hover:bg-[#F5EBFA] hover:text-[#49225B] transition-colors"
                       onClick={() => setIsUserMenuOpen(false)}
                     >
                       <HiOutlineUserCircle className="w-4 h-4" />
@@ -204,13 +237,13 @@ const Navbar = () => {
 
                     <button
                       onClick={handleWorkplaceClick}
-                      className="w-full flex items-center space-x-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors"
+                      className="w-full flex items-center space-x-3 px-4 py-2.5 text-sm text-[#6E3482] hover:bg-[#F5EBFA] hover:text-[#49225B] transition-colors"
                     >
                       <HiOutlineBriefcase className="w-4 h-4" />
                       <span>Go to Workplace</span>
                     </button>
 
-                    <div className="border-t border-gray-100 mt-2 pt-2">
+                    <div className="border-t border-[#E7DBEF] mt-2 pt-2">
                       <button
                         onClick={handleLogout}
                         className="w-full flex items-center space-x-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
@@ -226,20 +259,34 @@ const Navbar = () => {
               /* User is not logged in - Show elegant single login button */
               <Link
                 to="/login"
-                className="group relative px-6 py-2.5 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-semibold shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 overflow-hidden"
+                className={`group relative px-6 py-2.5 rounded-full text-sm font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 overflow-hidden ${
+                  isScrolled
+                    ? 'bg-gradient-to-r from-[#49225B] via-[#6E3482] to-[#A56ABD] text-white'
+                    : 'bg-white/95 text-[#49225B] backdrop-blur-sm'
+                }`}
               >
                 <span className="relative z-10 flex items-center space-x-2">
                   <HiOutlineLogin className="w-4 h-4" />
                   <span>Login</span>
                 </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-indigo-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div 
+                  className={`absolute inset-0 transition-opacity duration-300 ${
+                    isScrolled
+                      ? 'bg-gradient-to-r from-[#6E3482] to-[#49225B] opacity-0 group-hover:opacity-100'
+                      : 'bg-gradient-to-r from-[#F5EBFA] to-white opacity-0 group-hover:opacity-100'
+                  }`}
+                ></div>
               </Link>
             )}
 
             {/* Mobile menu button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg text-gray-600 hover:text-blue-600 hover:bg-gray-50 transition-all duration-300 focus:outline-none"
+              className={`md:hidden p-2 rounded-lg transition-all duration-300 focus:outline-none ${
+                isScrolled
+                  ? 'text-[#6E3482] hover:text-[#49225B] hover:bg-[#F5EBFA]'
+                  : 'text-white hover:bg-white/10'
+              }`}
             >
               {isMobileMenuOpen ? (
                 <HiOutlineX className="w-6 h-6" />
@@ -253,9 +300,7 @@ const Navbar = () => {
 
       {/* Mobile menu with elegant animation */}
       <div
-        className={`md:hidden absolute top-full left-0 right-0 transition-all duration-300 ease-in-out ${
-          isScrolled ? 'bg-white/98 backdrop-blur-md' : 'bg-white'
-        } border-t border-gray-100 shadow-2xl ${
+        className={`md:hidden absolute top-full left-0 right-0 transition-all duration-300 ease-in-out bg-white/98 backdrop-blur-lg border-t border-[#E7DBEF] shadow-2xl ${
           isMobileMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'
         }`}
       >
@@ -273,16 +318,16 @@ const Navbar = () => {
                 }}
                 className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ${
                   isActive
-                    ? 'bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700'
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-blue-600'
+                    ? 'bg-gradient-to-r from-[#F5EBFA] to-[#E7DBEF] text-[#49225B]'
+                    : 'text-[#6E3482] hover:bg-[#F5EBFA] hover:text-[#49225B]'
                 }`}
               >
                 <Icon className={`w-5 h-5 ${
-                  isActive ? 'text-blue-600' : 'text-gray-400'
+                  isActive ? 'text-[#6E3482]' : 'text-[#A56ABD]'
                 }`} />
                 <span className="font-medium">{link.label}</span>
                 {isActive && (
-                  <HiCheck className="w-4 h-4 ml-auto text-blue-600" />
+                  <HiCheck className="w-4 h-4 ml-auto text-[#6E3482]" />
                 )}
               </Link>
             )
@@ -291,8 +336,8 @@ const Navbar = () => {
           {/* Mobile auth based on login status */}
           {user ? (
             <>
-              <div className="flex items-center space-x-3 px-4 py-4 border-t border-gray-100 mt-3">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center text-white text-lg font-semibold shadow-md">
+              <div className="flex items-center space-x-3 px-4 py-4 border-t border-[#E7DBEF] mt-3 bg-gradient-to-r from-[#F5EBFA] to-transparent rounded-xl">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-r from-[#49225B] via-[#6E3482] to-[#A56ABD] flex items-center justify-center text-white text-lg font-semibold shadow-md">
                   {user.avatar ? (
                     <img src={user.avatar} alt={user.name} className="w-full h-full rounded-full object-cover" />
                   ) : (
@@ -300,14 +345,14 @@ const Navbar = () => {
                   )}
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-semibold text-gray-900">{user.name || 'User'}</p>
-                  <p className="text-xs text-gray-500 mt-0.5">{user.email}</p>
+                  <p className="text-sm font-semibold text-[#49225B]">{user.name || 'User'}</p>
+                  <p className="text-xs text-[#6E3482] mt-0.5">{user.email}</p>
                 </div>
               </div>
 
               <button
                 onClick={handleWorkplaceClick}
-                className="w-full mt-2 px-4 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium hover:shadow-md transition-all duration-300 flex items-center justify-center space-x-2"
+                className="w-full mt-2 px-4 py-3 rounded-xl bg-gradient-to-r from-[#49225B] via-[#6E3482] to-[#A56ABD] text-white font-medium hover:shadow-lg transition-all duration-300 flex items-center justify-center space-x-2"
               >
                 <HiOutlineBriefcase className="w-5 h-5" />
                 <span>Go to Workplace</span>
@@ -324,7 +369,7 @@ const Navbar = () => {
           ) : (
             <Link
               to="/login"
-              className="w-full mt-3 px-4 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium hover:shadow-lg transform transition-all duration-300 flex items-center justify-center space-x-2"
+              className="w-full mt-3 px-4 py-3 rounded-xl bg-gradient-to-r from-[#49225B] via-[#6E3482] to-[#A56ABD] text-white font-medium hover:shadow-lg transform transition-all duration-300 flex items-center justify-center space-x-2"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               <HiOutlineLogin className="w-5 h-5" />
@@ -335,9 +380,11 @@ const Navbar = () => {
       </div>
 
       {/* Elegant bottom border gradient */}
-      <div className={`absolute bottom-0 left-0 right-0 h-px transition-opacity duration-500 ${
-        isScrolled ? 'opacity-100' : 'opacity-0'
-      } bg-gradient-to-r from-transparent via-blue-400/50 to-transparent`}></div>
+      <div 
+        className={`absolute bottom-0 left-0 right-0 h-px transition-opacity duration-500 ${
+          isScrolled ? 'opacity-100' : 'opacity-0'
+        } bg-gradient-to-r from-transparent via-[#A56ABD]/50 to-transparent`}
+      ></div>
     </nav>
   )
 }

@@ -3,8 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getMyWorkspaceRole } from '../../api';
 import { FiLoader, FiAlertCircle } from 'react-icons/fi';
 import WorkPlaceHome from '../components/WorkPlaceHome'; // existing manager dashboard
-import TeamLeaderDashboard from './TeamLeaderDashboard';
-import TeamMemberDashboard from './TeamMemberDashboard';
+import TeamLeaderDashboard from '../dashboard/TeamLeaderDashboard';
+import TeamMemberDashboard from '../dashboard/TeamMemberDashboard';
 import { useAuth } from '../../context/AuthContext';
 
 const WorkspaceRoleRouter = () => {

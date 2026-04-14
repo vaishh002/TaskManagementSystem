@@ -1,291 +1,815 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
+import {
+  LayoutGrid,
+  ShieldCheck,
+  UserPlus,
+  FolderKanban,
+  BarChart3,
+  Search,
+  X,
+  ChevronDown,
+  Share2,
+  Bookmark,
+  ArrowRight,
+  Link2,
+  HelpCircle,
+  Clock,
+  ThumbsUp,
+  MessageCircle,
+  AlertCircle,
+  Sparkles,
+  Zap,
+} from "lucide-react";
 
+// ── Import your images (place them in the same folder or adjust paths)
+import heroBg from "./bgimage.png";
+import helpIcon from "./help.png";
+import supportBg from "./support.png";
+import gettingStartedIcon from "./GettingStartedGuide.png";
+import videoTutorialsIcon from "./Videotutorials.png";
+import faqIcon from "./faq.png";
+import apiIcon from "./api.png";
+import noteIcon from "./note.png";
+
+/* ─── Color Palette
+   #071952  → darkNavy   (primary dark)
+   #088395  → teal       (primary accent)
+   #37B7C3  → lightTeal  (secondary accent)
+   #EBF4F6  → iceBlue    (background / light surface)
+─────────────────────────────────────────────── */
+
+/* ─── Animated Accordion Item ────────────────────────────── */
+const AccordionItem = ({ faq, idx, isOpen, onToggle }) => {
+  const bodyRef = useRef(null);
+  const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    if (bodyRef.current) {
+      setHeight(isOpen ? bodyRef.current.scrollHeight : 0);
+    }
+  }, [isOpen]);
+
+  const categoryColors = {
+    access: "bg-[#EBF4F6] text-[#071952]",
+    onboarding: "bg-[#EBF4F6] text-[#088395]",
+    projects: "bg-[#EBF4F6] text-[#37B7C3]",
+    reporting: "bg-[#EBF4F6] text-[#071952]",
+    deadlines: "bg-[#EBF4F6] text-[#088395]",
+    general: "bg-[#EBF4F6] text-[#37B7C3]",
+  };
+
+  const badgeClass =
+    categoryColors[faq.category] || "bg-[#EBF4F6] text-[#071952]";
+
+  return (
+    <div
+      className={`group bg-white rounded-2xl border transition-all duration-300 overflow-hidden faq-card backdrop-blur-sm ${
+        isOpen
+          ? "border-[#37B7C3] shadow-2xl shadow-[#088395]/20 scale-100"
+          : "border-[#EBF4F6] shadow-md hover:shadow-lg hover:border-[#37B7C3] hover:scale-[1.02]"
+      }`}
+      style={{ animationDelay: `${idx * 80}ms` }}
+    >
+      <button
+        onClick={onToggle}
+        className="w-full text-left p-5 sm:p-6 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#37B7C3] rounded-2xl transition-all duration-300"
+        aria-expanded={isOpen}
+      >
+        <div className="flex items-start gap-4">
+          {/* Icon bubble */}
+          <div
+            className={`shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 icon-bubble ${
+              isOpen
+                ? "text-white shadow-lg shadow-[#088395]/30 scale-110"
+                : "bg-[#EBF4F6] text-[#088395] group-hover:bg-[#EBF4F6] group-hover:scale-105"
+            }`}
+            style={
+              isOpen
+                ? { background: "linear-gradient(135deg, #088395, #071952)" }
+                : {}
+            }
+          >
+            <faq.IconComp size={18} strokeWidth={2} />
+          </div>
+
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1 flex-wrap">
+              <span
+                className={`text-xs font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full transition-all duration-300 ${badgeClass} shadow-sm`}
+              >
+                {faq.category}
+              </span>
+            </div>
+            <h3 className="text-base sm:text-lg font-semibold text-[#071952] leading-snug pr-2 group-hover:text-[#088395] transition-colors duration-300">
+              {faq.q}
+            </h3>
+          </div>
+
+          {/* Chevron */}
+          <div
+            className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 chevron-icon ${
+              isOpen
+                ? "text-white rotate-180 shadow-lg shadow-[#088395]/30"
+                : "bg-[#EBF4F6] text-[#37B7C3] group-hover:bg-[#EBF4F6] group-hover:text-[#088395]"
+            }`}
+            style={
+              isOpen
+                ? { background: "linear-gradient(135deg, #088395, #071952)" }
+                : {}
+            }
+          >
+            <ChevronDown size={16} strokeWidth={2.5} />
+          </div>
+        </div>
+      </button>
+
+      {/* Expandable body */}
+      <div
+        ref={bodyRef}
+        style={{ height, transition: "height 0.35s cubic-bezier(0.4,0,0.2,1)" }}
+        className="overflow-hidden"
+      >
+        <div className="px-5 sm:px-6 pb-5 sm:pb-6 pt-2 pl-20 sm:pl-24 answer-content">
+          <div
+            className="w-12 h-1 rounded-full mb-3 answer-line"
+            style={{ background: "linear-gradient(90deg, #088395, #37B7C3)" }}
+          />
+          <p className="text-[#071952]/70 leading-relaxed text-sm sm:text-base">
+            {faq.a}
+          </p>
+          <div className="mt-4 flex gap-4">
+            <button className="text-xs sm:text-sm text-[#088395] hover:text-[#071952] font-medium flex items-center gap-1.5 group/btn transition-all duration-300 hover:bg-[#EBF4F6] px-3 py-1.5 rounded-lg">
+              <Share2
+                size={14}
+                className="group-hover/btn:scale-125 group-hover/btn:rotate-12 transition-transform"
+              />
+              Share
+            </button>
+            <button className="text-xs sm:text-sm text-[#071952]/50 hover:text-[#071952] font-medium flex items-center gap-1.5 group/btn transition-all duration-300 hover:bg-[#EBF4F6] px-3 py-1.5 rounded-lg">
+              <Bookmark
+                size={14}
+                className="group-hover/btn:scale-125 group-hover/btn:fill-current transition-transform"
+              />
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/* ─── Main Component ──────────────────────────────────────── */
 const Help = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const [expandedFaq, setExpandedFaq] = useState(null);
 
+  const categories = [
+    { name: "All", value: "all", Icon: LayoutGrid },
+    { name: "Access", value: "access", Icon: ShieldCheck },
+    { name: "Onboarding", value: "onboarding", Icon: UserPlus },
+    { name: "Projects", value: "projects", Icon: FolderKanban },
+    { name: "Reporting", value: "reporting", Icon: BarChart3 },
+  ];
+
   const faqs = [
+    /* ── Access ── */
     {
       q: "Who can log in to TaskFlow?",
       a: "Only Admins and Managers have login access. Team Leaders have a limited task submission form, and Interns do not log in.",
       category: "access",
-      icon: "🔐"
+      IconComp: ShieldCheck,
     },
     {
-      q: "How are interns onboarded?",
-      a: "Managers can upload interns in bulk using CSV or Excel files. The system validates emails, unique IDs, and formats.",
-      category: "onboarding",
-      icon: "👥"
+      q: "How do I reset my password?",
+      a: 'Click "Forgot Password" on the login page. A reset link will be sent to your registered email. Links expire after 30 minutes for security.',
+      category: "access",
+      IconComp: ShieldCheck,
     },
+    {
+      q: "Can an Admin revoke a Manager",
+      a: "Yes. Admins can deactivate any account from the User Management panel. Deactivated accounts are logged out immediately and cannot log in.",
+      category: "access",
+      IconComp: ShieldCheck,
+    },
+    /* ── Onboarding ── */
+    {
+      q: "How are interns onboarded?",
+      a: "Managers can upload interns in bulk using CSV or Excel files. The system validates emails, unique IDs, and formats automatically.",
+      category: "onboarding",
+      IconComp: UserPlus,
+    },
+    {
+      q: "What fields are required in the bulk-upload template?",
+      a: "Full Name, Email, Unique ID, Department, and Start Date are mandatory. Phone and secondary email are optional.",
+      category: "onboarding",
+      IconComp: UserPlus,
+    },
+    {
+      q: "Can I onboard a single intern without a CSV?",
+      a: 'Yes. Use the "Add Intern" form inside Onboarding → Manual Entry to add one intern at a time with the same required fields.',
+      category: "onboarding",
+      IconComp: UserPlus,
+    },
+    /* ── Projects ── */
     {
       q: "Can a Team Leader create projects?",
       a: "No, Team Leaders cannot create projects. They only submit daily work reports for their assigned team members.",
       category: "projects",
-      icon: "📋"
+      IconComp: FolderKanban,
     },
     {
+      q: "How do I archive a completed project?",
+      a: 'Admins and Managers can mark a project as "Archived" from the Project Settings menu. Archived projects are hidden from active views but remain searchable.',
+      category: "projects",
+      IconComp: FolderKanban,
+    },
+    {
+      q: "Can multiple teams be assigned to one project?",
+      a: "Yes. A project can have multiple teams attached. Each team sees only their own tasks and reports unless granted broader visibility by an Admin.",
+      category: "projects",
+      IconComp: FolderKanban,
+    },
+    /* ── Reporting ── */
+    {
       q: "How does task reporting work?",
-      a: "Team Leaders select a project, date, team member, enter work description, status, and remarks. Reports are stored date-wise.",
+      a: "Team Leaders select a project, date, team member, enter work description, status, and remarks. Reports are stored date-wise and visible to Managers and Admins.",
       category: "reporting",
-      icon: "📊"
+      IconComp: BarChart3,
+    },
+    {
+      q: "Can I export reports to Excel or PDF?",
+      a: "Yes. From the Reports section, choose your date range and filters, then click Export. Excel (.xlsx) and PDF formats are both supported.",
+      category: "reporting",
+      IconComp: BarChart3,
     },
     {
       q: "What happens if a project deadline is missed?",
-      a: "Admins and Managers can monitor deadlines on dashboards; email notifications can be enabled for alerts.",
-      category: "deadlines",
-      icon: "⏰"
-    }
+      a: "Admins and Managers can monitor deadlines on dashboards; email notifications can be enabled for proactive alerts before and after the deadline.",
+      category: "reporting",
+      IconComp: AlertCircle,
+    },
   ];
 
-  const categories = [
-    { name: "All", value: "all", icon: "🎯" },
-    { name: "Access", value: "access", icon: "🔐" },
-    { name: "Onboarding", value: "onboarding", icon: "👥" },
-    { name: "Projects", value: "projects", icon: "📋" },
-    { name: "Reporting", value: "reporting", icon: "📊" }
-  ];
-
-  const [selectedCategory, setSelectedCategory] = useState('all');
-
-  const filteredFaqs = faqs.filter(faq => {
-    const matchesSearch = faq.q.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          faq.a.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || faq.category === selectedCategory;
+  const filteredFaqs = faqs.filter((faq) => {
+    const matchesSearch =
+      faq.q.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      faq.a.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      selectedCategory === "all" || faq.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 pt-28 pb-20 px-4 relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-indigo-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-100 rounded-full mix-blend-multiply filter blur-xl opacity-50 animate-blob animation-delay-4000"></div>
-      </div>
+  const handleToggle = (idx) =>
+    setExpandedFaq((prev) => (prev === idx ? null : idx));
+  const handleCategoryChange = (val) => {
+    setSelectedCategory(val);
+    setExpandedFaq(null);
+  };
 
-      <div className="max-w-6xl mx-auto relative z-10">
-        {/* Header Section with Decoration */}
-        <div className="text-center mb-12 animate-slideUp">
-          <div className="inline-flex items-center justify-center mb-6">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg transform rotate-3 hover:rotate-6 transition-transform duration-300 animate-scaleIn">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-          </div>
-          <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800 bg-clip-text text-transparent mb-4 animate-fadeIn">
-            How can we help you?
-          </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto animate-slideUp animation-delay-200">
-            Find answers, get support, and learn how to make the most of TaskFlow
-          </p>
+  return (
+    <div
+      className="min-h-screen w-full flex flex-col relative overflow-hidden"
+      style={{ background: "#EBF4F6" }}
+    >
+      {/* ── HERO SECTION with first image as background ── */}
+      <div
+        className="relative w-full overflow-hidden"
+        style={{
+          backgroundImage: `url(${heroBg})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center top",
+          backgroundRepeat: "no-repeat",
+          minHeight: "420px",
+        }}
+      >
+        {/* Dark navy overlay for readability */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(160deg, rgba(7,25,82,0.82) 0%, rgba(8,131,149,0.70) 60%, rgba(55,183,195,0.55) 100%)",
+          }}
+        />
+
+        {/* Animated subtle blobs on top of image */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div
+            className="absolute -top-20 -right-20 w-72 h-72 rounded-full opacity-20 animate-blob"
+            style={{ background: "#37B7C3", filter: "blur(60px)" }}
+          />
+          <div
+            className="absolute -bottom-20 -left-20 w-72 h-72 rounded-full opacity-20 animate-blob animation-delay-2000"
+            style={{ background: "#088395", filter: "blur(60px)" }}
+          />
         </div>
 
-        {/* Search Bar */}
-        <div className="max-w-2xl mx-auto mb-10 animate-slideUp animation-delay-300">
-          <div className="relative group">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <svg className="w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
-            <input
-              type="text"
-              placeholder="Search for answers..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 bg-white border-2 border-blue-100 rounded-2xl focus:border-blue-400 focus:ring-4 focus:ring-blue-100 transition-all duration-300 shadow-sm hover:shadow-md text-gray-700"
+        {/* Hero Content */}
+        <div
+          className="relative z-10 flex flex-col items-center justify-between text-center px-4 pt-10 pb-10 sm:pt-14 sm:pb-12"
+          style={{ minHeight: "420px" }}
+        >
+          {/* ── TOP — Logo ── */}
+          <div className="inline-flex items-center justify-center relative animate-slideUp">
+            {/* Glowing ring behind logo */}
+            <div
+              className="absolute inset-0 rounded-2xl blur-2xl opacity-70 animate-pulse"
+              style={{
+                background: "linear-gradient(135deg, #37B7C3, #088395)",
+              }}
             />
-            {searchTerm && (
-              <button
-                onClick={() => setSearchTerm('')}
-                className="absolute inset-y-0 right-0 pr-4 flex items-center"
+            <div
+              className="relative w-24 h-24 rounded-2xl flex items-center justify-center shadow-2xl transform hover:scale-110 hover:rotate-3 transition-all duration-300 p-1"
+              style={{
+                background:
+                  "linear-gradient(135deg, #EBF4F6 0%, #37B7C3 50%, #088395 100%)",
+                boxShadow: "0 8px 32px rgba(8,131,149,0.45)",
+              }}
+            >
+              <img
+                src={helpIcon}
+                alt="Help"
+                className="w-16 h-16 object-contain drop-shadow-lg"
+                style={{ filter: "drop-shadow(0 2px 8px rgba(7,25,82,0.3))" }}
+              />
+            </div>
+          </div>
+
+          {/* ── BOTTOM — Heading + Subtext + Search ── */}
+          <div className="w-full animate-slideUp animation-delay-200">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-3 leading-tight drop-shadow-lg">
+              How can we <span style={{ color: "#37B7C3" }}>help you?</span>
+            </h1>
+            <p
+              className="text-base sm:text-lg max-w-2xl mx-auto leading-relaxed mb-8"
+              style={{ color: "#EBF4F6", opacity: 0.9 }}
+            >
+              Find answers, get support, and learn how to make the most of
+              TaskFlow
+            </p>
+
+            {/* ── Search Bar ── */}
+            <div className="w-full max-w-2xl mx-auto animate-slideUp animation-delay-300">
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Search
+                    className="w-5 h-5 transition-colors duration-300"
+                    style={{ color: "#088395" }}
+                    strokeWidth={2}
+                  />
+                </div>
+                <input
+                  type="text"
+                  placeholder="Search for answers..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-12 pr-10 py-4 rounded-2xl focus:ring-4 transition-all duration-300 shadow-2xl text-[#071952] outline-none"
+                  style={{
+                    background: "rgba(235,244,246,0.97)",
+                    border: "2px solid #37B7C3",
+                  }}
+                  onFocus={(e) => (e.target.style.borderColor = "#088395")}
+                  onBlur={(e) => (e.target.style.borderColor = "#37B7C3")}
+                />
+                {searchTerm && (
+                  <button
+                    onClick={() => setSearchTerm("")}
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center hover:scale-110 transition-transform"
+                    aria-label="Clear search"
+                  >
+                    <X
+                      className="w-5 h-5 transition-colors"
+                      style={{ color: "#088395" }}
+                    />
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* END HERO */}
+
+      {/* ── Main Body ── */}
+      <div className="flex-1 w-full px-4 pt-10 pb-20">
+        <div className="max-w-6xl w-full mx-auto relative z-10">
+          {/* ── Category Filters ── */}
+          <div className="flex justify-center mb-12 animate-fadeIn animation-delay-400">
+            <div className="flex items-center flex-wrap justify-center gap-y-6">
+              {categories.map((cat, idx) => {
+                const isActive = selectedCategory === cat.value;
+                return (
+                  <div key={cat.value} className="flex items-center">
+                    <button
+                      onClick={() => handleCategoryChange(cat.value)}
+                      className="flex flex-col items-center gap-2 group focus:outline-none transition-all duration-300"
+                      style={{ animationDelay: `${idx * 70}ms` }}
+                    >
+                      <div
+                        className="w-14 h-14 rounded-full flex items-center justify-center border-2 transition-all duration-300 category-bubble"
+                        style={{
+                          borderColor: isActive ? "#088395" : "#37B7C3",
+                          background: isActive
+                            ? "linear-gradient(135deg, #EBF4F6, #d0ecf0)"
+                            : "white",
+                          transform: isActive ? "scale(1.1)" : "scale(1)",
+                          boxShadow: isActive
+                            ? "0 8px 24px rgba(8,131,149,0.25)"
+                            : "none",
+                        }}
+                      >
+                        <cat.Icon
+                          size={20}
+                          strokeWidth={isActive ? 2.5 : 2}
+                          style={{ color: isActive ? "#071952" : "#37B7C3" }}
+                        />
+                      </div>
+                      <span
+                        className="text-xs font-semibold tracking-wide transition-all duration-300"
+                        style={{
+                          color: isActive ? "#071952" : "#088395",
+                          fontWeight: isActive ? 700 : 600,
+                        }}
+                      >
+                        {cat.name}
+                      </span>
+                    </button>
+
+                    {idx < categories.length - 1 && (
+                      <div className="mx-1 sm:mx-2 mb-5 flex items-center">
+                        <div
+                          className="h-1 w-6 sm:w-10 rounded-full transition-all duration-500"
+                          style={{
+                            background:
+                              selectedCategory === cat.value ||
+                              selectedCategory === categories[idx + 1].value
+                                ? "linear-gradient(90deg, #088395, #37B7C3)"
+                                : "#EBF4F6",
+                          }}
+                        />
+                        <div
+                          className="w-2 h-2 rounded-full mx-0.5 transition-all duration-500"
+                          style={{
+                            background:
+                              selectedCategory === cat.value ||
+                              selectedCategory === categories[idx + 1].value
+                                ? "#071952"
+                                : "#37B7C3",
+                            transform:
+                              selectedCategory === cat.value ||
+                              selectedCategory === categories[idx + 1].value
+                                ? "scale(1.25)"
+                                : "scale(1)",
+                          }}
+                        />
+                        <div
+                          className="h-1 w-6 sm:w-10 rounded-full transition-all duration-500"
+                          style={{
+                            background:
+                              selectedCategory === cat.value ||
+                              selectedCategory === categories[idx + 1].value
+                                ? "linear-gradient(90deg, #37B7C3, #088395)"
+                                : "#EBF4F6",
+                          }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* ── FAQ Section Label ── */}
+          <div className="flex items-center gap-3 mb-8 animate-slideUp">
+            <div
+              className="flex-1 h-px"
+              style={{
+                background:
+                  "linear-gradient(90deg, transparent, #37B7C3, transparent)",
+              }}
+            />
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4" style={{ color: "#088395" }} />
+              <span
+                className="text-sm font-semibold uppercase tracking-widest whitespace-nowrap"
+                style={{ color: "#071952" }}
               >
-                <svg className="w-5 h-5 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
+                Frequently Asked Questions
+              </span>
+              <Sparkles className="w-4 h-4" style={{ color: "#088395" }} />
+            </div>
+            <div
+              className="flex-1 h-px"
+              style={{
+                background:
+                  "linear-gradient(90deg, transparent, #37B7C3, transparent)",
+              }}
+            />
+          </div>
+
+          {/* ── FAQ Cards ── */}
+          <div className="grid gap-4 mb-12">
+            {filteredFaqs.length > 0 ? (
+              filteredFaqs.map((faq, idx) => (
+                <AccordionItem
+                  key={`${faq.q}-${idx}`}
+                  faq={faq}
+                  idx={idx}
+                  isOpen={expandedFaq === idx}
+                  onToggle={() => handleToggle(idx)}
+                />
+              ))
+            ) : (
+              <div className="text-center py-16 animate-fadeIn">
+                <div
+                  className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 animate-bounce"
+                  style={{
+                    background: "linear-gradient(135deg, #EBF4F6, #d0ecf0)",
+                  }}
+                >
+                  <Search className="w-8 h-8" style={{ color: "#37B7C3" }} />
+                </div>
+                <h3
+                  className="text-xl font-semibold mb-2"
+                  style={{ color: "#071952" }}
+                >
+                  No results found
+                </h3>
+                <p style={{ color: "#088395" }}>
+                  Try adjusting your search or browse by category
+                </p>
+              </div>
             )}
           </div>
-        </div>
 
-        {/* Category Filters */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12 animate-fadeIn animation-delay-400">
-          {categories.map((cat, idx) => (
-            <button
-              key={cat.value}
-              onClick={() => setSelectedCategory(cat.value)}
-              className={`px-5 py-2.5 rounded-full font-medium transition-all duration-300 transform hover:scale-105 ${
-                selectedCategory === cat.value
-                  ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-200'
-                  : 'bg-white text-gray-600 hover:bg-blue-50 border-2 border-blue-100'
-              }`}
-              style={{ animationDelay: `${idx * 50}ms` }}
+          {/* ── Support Cards ── */}
+          <div className="grid md:grid-cols-2 gap-6 mt-8">
+            {/* Contact Support Card — support.png full background, centered text */}
+            <div
+              className="group rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-2 animate-slideUp animation-delay-500 relative overflow-hidden flex flex-col"
+              style={{
+                backgroundImage: `url(${supportBg})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                minHeight: "320px",
+              }}
             >
-              <span className="mr-2">{cat.icon}</span>
-              {cat.name}
-            </button>
-          ))}
-        </div>
-
-        {/* FAQ Cards */}
-        <div className="grid gap-6 mb-12">
-          {filteredFaqs.length > 0 ? (
-            filteredFaqs.map((faq, idx) => (
+              {/* Dark navy-to-teal overlay for readability */}
               <div
-                key={idx}
-                className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-blue-100 hover:border-blue-300 animate-slideUp"
-                style={{ animationDelay: `${idx * 100}ms` }}
-              >
-                <button
-                  onClick={() => setExpandedFaq(expandedFaq === idx ? null : idx)}
-                  className="w-full text-left p-6 focus:outline-none"
+                className="absolute inset-0 transition-opacity duration-300"
+                style={{
+                  background:
+                    "linear-gradient(160deg, rgba(7,25,82,0.55) 0%, rgba(8,131,149,0.50) 100%)",
+                }}
+              />
+
+              {/* TOP — Logo + heading */}
+              <div className="relative z-10 flex flex-col items-center text-center px-8 pt-8">
+                <div
+                  className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-125 transition-transform duration-300"
+                  style={{
+                    background: "rgba(235,244,246,0.20)",
+                    backdropFilter: "blur(8px)",
+                  }}
                 >
-                  <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform duration-300">
-                      {faq.icon}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-xl font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
-                          {faq.q}
-                        </h3>
-                        <svg
-                          className={`w-6 h-6 text-blue-500 transform transition-transform duration-300 ${
-                            expandedFaq === idx ? 'rotate-180' : ''
-                          }`}
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </div>
-                      <div
-                        className={`overflow-hidden transition-all duration-300 ${
-                          expandedFaq === idx ? 'mt-4' : 'max-h-0'
-                        }`}
-                      >
-                        <div className="pt-2">
-                          <div className="w-12 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full mb-3 animate-slideRight"></div>
-                          <p className="text-gray-600 leading-relaxed">{faq.a}</p>
-
-                          {/* Quick Actions */}
-                          <div className="mt-4 flex gap-3">
-                            <button className="text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1 group">
-                              <svg className="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-                              </svg>
-                              Share
-                            </button>
-                            <button className="text-sm text-gray-500 hover:text-gray-700 font-medium flex items-center gap-1 group">
-                              <svg className="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                              </svg>
-                              Save
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </button>
+                  <MessageCircle
+                    className="w-10 h-10 text-white"
+                    strokeWidth={1.5}
+                  />
+                </div>
+                <h2 className="text-2xl font-bold text-white mb-0">
+                  Need direct support?
+                </h2>
               </div>
-            ))
-          ) : (
-            <div className="text-center py-12 animate-fadeIn">
-              <div className="text-6xl mb-4 animate-bounce">🔍</div>
-              <h3 className="text-xl font-semibold text-gray-700 mb-2">No results found</h3>
-              <p className="text-gray-500">Try adjusting your search or browse by category</p>
-            </div>
-          )}
-        </div>
 
-        {/* Support Section with Cards */}
-        <div className="grid md:grid-cols-2 gap-6 mt-8">
-          {/* Contact Support Card */}
-          <div className="group bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-8 text-center shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 animate-slideUp animation-delay-500">
-            <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 backdrop-blur-sm">
-              <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
-              </svg>
+              {/* MIDDLE — spacer */}
+              <div className="flex-1" />
+
+              {/* BOTTOM — button then description */}
+              <div className="relative z-10 flex flex-col items-center text-center px-8 pb-8 gap-4">
+                <Link
+                  to="/contact"
+                  className="inline-flex items-center gap-2 px-8 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 group/link"
+                  style={{ background: "#EBF4F6", color: "#071952" }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "#37B7C3";
+                    e.currentTarget.style.color = "white";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "#EBF4F6";
+                    e.currentTarget.style.color = "#071952";
+                  }}
+                >
+                  Contact Support
+                  <ArrowRight className="w-5 h-5 group-hover/link:translate-x-2 transition-transform" />
+                </Link>
+                <p
+                  className="text-sm"
+                  style={{ color: "#EBF4F6", opacity: 0.9 }}
+                >
+                  Our team is ready to help you with any questions
+                </p>
+              </div>
             </div>
-            <h2 className="text-2xl font-bold text-white mb-3">Need direct support?</h2>
-            <p className="text-blue-100 mb-6">Our team is ready to help you with any questions</p>
-            <Link
-              to="/contact"
-              className="inline-flex items-center gap-2 bg-white text-blue-700 px-8 py-3 rounded-xl font-semibold hover:bg-blue-50 hover:shadow-lg transition-all duration-300 transform hover:scale-105 group"
+
+            {/* Quick Resources — styled like reference image */}
+            <div
+              className="rounded-2xl shadow-2xl overflow-hidden animate-scaleIn animation-delay-500 relative flex flex-col"
+              style={{
+                minHeight: "320px",
+                background:
+                  "linear-gradient(135deg, #071952 0%, #088395 60%, #37B7C3 100%)",
+              }}
             >
-              Contact Support
-              <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
-          </div>
-
-          {/* Quick Links Card */}
-          <div className="bg-white rounded-2xl p-8 shadow-lg border border-blue-100 hover:shadow-xl transition-all duration-300 animate-scaleIn animation-delay-500">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.102m3.172-3.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.102" />
-                </svg>
+              {/* Wavy blob decorations */}
+              <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div
+                  className="absolute -top-16 -left-16 w-64 h-64 rounded-full opacity-25"
+                  style={{ background: "#37B7C3" }}
+                />
+                <div
+                  className="absolute top-8 right-0 w-48 h-48 rounded-full opacity-20"
+                  style={{ background: "#EBF4F6" }}
+                />
+                <div
+                  className="absolute bottom-0 left-1/3 w-56 h-56 rounded-full opacity-15"
+                  style={{ background: "#088395" }}
+                />
+                <div
+                  className="absolute -bottom-10 right-10 w-40 h-40 rounded-full opacity-20"
+                  style={{ background: "#37B7C3" }}
+                />
               </div>
-              <h3 className="text-xl font-bold text-gray-800">Quick Resources</h3>
-            </div>
-            <div className="space-y-3">
-              {['Getting Started Guide', 'Video Tutorials', 'API Documentation', 'Release Notes'].map((item, i) => (
-                <a
-                  key={i}
-                  href="#"
-                  className="flex items-center justify-between p-3 rounded-lg hover:bg-blue-50 transition-colors group/item animate-fadeIn"
-                  style={{ animationDelay: `${i * 100}ms` }}
-                >
-                  <span className="text-gray-700 group-hover/item:text-blue-600">{item}</span>
-                  <svg className="w-5 h-5 text-gray-400 group-hover/item:text-blue-500 transform group-hover/item:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
 
-        {/* Stats Section */}
-        <div className="mt-12 grid grid-cols-3 gap-4">
-          <div className="text-center p-4 animate-scaleIn" style={{ animationDelay: '0ms' }}>
-            <div className="text-3xl font-bold text-blue-600 mb-1 animate-pulse">24/7</div>
-            <div className="text-sm text-gray-500">Support Available</div>
+              {/* Header */}
+              <div className="relative z-10 px-7 pt-7 pb-3">
+                <h3 className="text-2xl font-bold text-white">Quick Links</h3>
+              </div>
+
+              {/* Icon Grid */}
+              <div className="relative z-10 flex-1 px-6 pb-6">
+                <div className="grid grid-cols-3 gap-4">
+                  {[
+                    {
+                      label: "Getting Started",
+                      icon: gettingStartedIcon,
+                      to: "#",
+                    },
+                    {
+                      label: "Video Tutorials",
+                      icon: videoTutorialsIcon,
+                      to: "#",
+                    },
+                    { label: "FAQ", icon: faqIcon, to: "/faq" },
+                    { label: "API Docs", icon: apiIcon, to: "#" },
+                    { label: "Release Notes", icon: noteIcon, to: "#" },
+                  ].map((item, i) => (
+                    <Link
+                      key={i}
+                      to={item.to}
+                      className="flex flex-col items-center gap-2 group/item"
+                      style={{ animationDelay: `${i * 80}ms` }}
+                    >
+                      {/* Icon bubble */}
+                      <div
+                        className="w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover/item:scale-110 group-hover/item:shadow-xl"
+                        style={{
+                          background: "rgba(235,244,246,0.15)",
+                          backdropFilter: "blur(8px)",
+                          border: "1px solid rgba(235,244,246,0.25)",
+                        }}
+                      >
+                        <img
+                          src={item.icon}
+                          alt={item.label}
+                          className="w-10 h-10 object-contain"
+                        />
+                      </div>
+                      {/* Label */}
+                      <span
+                        className="text-xs font-semibold text-center leading-tight transition-colors duration-300 group-hover/item:text-white"
+                        style={{ color: "rgba(235,244,246,0.85)" }}
+                      >
+                        {item.label}
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="text-center p-4 border-x border-blue-100 animate-scaleIn" style={{ animationDelay: '100ms' }}>
-            <div className="text-3xl font-bold text-blue-600 mb-1 animate-pulse">&lt; 2hr</div>
-            <div className="text-sm text-gray-500">Response Time</div>
+
+          {/* ── Stats ── */}
+          <div className="mt-12 grid grid-cols-3 gap-4">
+            {[
+              { val: "24/7", label: "Support Available", Icon: Clock },
+              { val: "< 2hr", label: "Response Time", Icon: Zap },
+              { val: "98%", label: "Satisfaction Rate", Icon: ThumbsUp },
+            ].map(({ val, label, Icon }, i) => (
+              <div
+                key={i}
+                className="text-center p-6 animate-scaleIn rounded-xl border transition-all duration-300 hover:shadow-lg transform hover:scale-105"
+                style={{
+                  background: "white",
+                  borderColor: "#EBF4F6",
+                  animationDelay: `${i * 100}ms`,
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = "#37B7C3";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = "#EBF4F6";
+                }}
+              >
+                <div className="flex justify-center mb-3">
+                  <div
+                    className="p-2 rounded-lg"
+                    style={{
+                      background: "linear-gradient(135deg, #EBF4F6, #d0ecf0)",
+                    }}
+                  >
+                    <Icon
+                      className="w-5 h-5"
+                      style={{ color: "#088395" }}
+                      strokeWidth={2}
+                    />
+                  </div>
+                </div>
+                <div
+                  className="text-2xl sm:text-3xl font-bold mb-1"
+                  style={{
+                    background: "linear-gradient(135deg, #071952, #088395)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                  }}
+                >
+                  {val}
+                </div>
+                <div
+                  className="text-xs sm:text-sm font-medium"
+                  style={{ color: "#088395" }}
+                >
+                  {label}
+                </div>
+              </div>
+            ))}
           </div>
-          <div className="text-center p-4 animate-scaleIn" style={{ animationDelay: '200ms' }}>
-            <div className="text-3xl font-bold text-blue-600 mb-1 animate-pulse">98%</div>
-            <div className="text-sm text-gray-500">Satisfaction Rate</div>
-          </div>
+
+          {/* ── Global Styles ── */}
+          <style>{`
+            @keyframes blob {
+              0%   { transform: translate(0px, 0px) scale(1); }
+              33%  { transform: translate(30px, -50px) scale(1.1); }
+              66%  { transform: translate(-20px, 20px) scale(0.9); }
+              100% { transform: translate(0px, 0px) scale(1); }
+            }
+            .animate-blob { animation: blob 7s infinite; }
+            .animation-delay-2000 { animation-delay: 2s; }
+            .animation-delay-3000 { animation-delay: 3s; }
+            .animation-delay-4000 { animation-delay: 4s; }
+
+            @keyframes slideUp {
+              from { opacity: 0; transform: translateY(24px); }
+              to   { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes fadeIn {
+              from { opacity: 0; }
+              to   { opacity: 1; }
+            }
+            @keyframes scaleIn {
+              from { opacity: 0; transform: scale(0.92); }
+              to   { opacity: 1; transform: scale(1); }
+            }
+
+            .animate-slideUp  { animation: slideUp  0.5s ease forwards; }
+            .animate-fadeIn   { animation: fadeIn   0.5s ease forwards; }
+            .animate-scaleIn  { animation: scaleIn  0.4s ease forwards; }
+
+            .animation-delay-200 { animation-delay: 0.2s; }
+            .animation-delay-300 { animation-delay: 0.3s; }
+            .animation-delay-400 { animation-delay: 0.4s; }
+            .animation-delay-500 { animation-delay: 0.5s; }
+
+            .faq-card { animation: slideUp 0.45s ease both; }
+
+            @keyframes bubblePop {
+              0%   { transform: scale(0.8); opacity: 0; }
+              60%  { transform: scale(1.12); }
+              100% { transform: scale(1); opacity: 1; }
+            }
+            .bubble-filter-enter { animation: bubblePop 0.35s cubic-bezier(0.34,1.56,0.64,1) both; }
+
+            .answer-content { animation: slideUp 0.35s ease forwards; }
+            .answer-line    { animation: slideUp 0.4s ease forwards; }
+
+            button, a { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+          `}</style>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes blob {
-          0% { transform: translate(0px, 0px) scale(1); }
-          33% { transform: translate(30px, -50px) scale(1.1); }
-          66% { transform: translate(-20px, 20px) scale(0.9); }
-          100% { transform: translate(0px, 0px) scale(1); }
-        }
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
-      `}</style>
     </div>
   );
 };

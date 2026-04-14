@@ -1,17 +1,17 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import PagesLayout from './components/Layout/PagesLayout';
 import ProtectedRoute from './components/Layout/ProtectedRoute';
-import Login from './components/auth/Login';
+import Login from "./components/auth/Login";
 import AcceptInvite from './components/components/AcceptInvite';
 import WorkPlaceHome from './components/components/WorkPlaceHome';
-import WorkspaceRoleRouter from './components/dashboard/WorkspaceRoleRouter';
+import WorkspaceRoleRouter from "./components/components/WorkspaceRoleRouter";
 import About from './pages/About';
 import Contact from './pages/Contact';
 import Help from './pages/Help';
 import Home from './pages/Home';
 import NotFoundPage from './pages/NotFoundPage';
 import Register from './pages/Register';
-import ForgotPasswordRequset from './components/auth/ForgotPasswordRequset'
+import ForgotPasswordRequset from './components/auth/ForgotPasswordRequest'
 import ResetPassword from './components/auth/ResetPassword'
 
 
