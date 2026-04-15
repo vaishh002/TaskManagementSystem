@@ -922,7 +922,7 @@ const CTASection = () => {
           viewport={{ once: true }}
           transition={{ delay: 0.1 }}
         >
-          Ready to Transform Your Workflow?
+          Where Productivity Meets Simplicity
         </motion.h2>
 
         <motion.p
@@ -933,7 +933,7 @@ const CTASection = () => {
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
         >
-          Join thousands of teams already using TaskFlow to streamline their operations
+          Everything your team needs to plan, track, and succeed — in one place.
         </motion.p>
 
         <motion.div
