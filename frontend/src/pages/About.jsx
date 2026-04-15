@@ -2,6 +2,20 @@ import { motion, useMotionValue, useTransform } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Users, CheckCircle, BarChart3 } from "lucide-react";
+import {
+  FileText,
+  Target,
+  ShieldCheck,
+  HeartPulse,
+  Wrench,
+  Crown,
+  User,
+  Lock,
+  Radio,
+  Settings,
+  TrendingUp,
+  Plug
+} from "lucide-react";
 
 // \\\\\\\\\\\\\\\\\\\\\\
 // HERO BUTTONS COMPONENT
@@ -12,7 +26,8 @@ const HeroButtons = ({ setShowVideo }) => {
     <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
 
       <motion.button
-        className="w-full sm:w-auto px-8 py-4 rounded-2xl font-semibold text-lg text-white transition-transform duration-300 will-change-transform"
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        className="w-full sm:w-auto px-8 py-4 rounded-2xl font-semibold text-lg text-white will-change-transform will-change-transform"
         style={{
           background: "linear-gradient(135deg, #49225B 0%, #6E3482 50%, #A56ABD 100%)",
           boxShadow: `
@@ -22,9 +37,10 @@ const HeroButtons = ({ setShowVideo }) => {
   `
         }}
         whileHover={{
-          y: -4,
-          scale: 1.03
-        }}
+  y: -4,
+  scale: 1.03,
+  transition: { duration: 0.15 }
+}}
         whileTap={{
           scale: 0.95,
           boxShadow: `
@@ -252,13 +268,8 @@ const scaleIn = {
 const HeroSection = () => {
   const [showVideo, setShowVideo] = useState(false);
   return (
-    <section className="relative min-h-[110vh] overflow-hidden w-full" style={{
-      background: `
-    radial-gradient(circle at 20% 30%, rgba(255,255,255,0.08), transparent 40%),
-    radial-gradient(circle at 80% 70%, rgba(255,255,255,0.06), transparent 40%),
-    linear-gradient(135deg, #4A1E5C 0%, #6E3482 40%, #A56ABD 100%)
-  `
-    }}>
+    <section className="relative min-h-[110vh] overflow-hidden w-full" 
+    style={{ backgroundColor: "#49225B" }}>
       <motion.div
         className="absolute top-20 left-[10%] w-16 h-16 rounded-full opacity-60"
         style={{ background: "linear-gradient(135deg, #B980EA, #9B51E0)" }}
@@ -465,8 +476,7 @@ const SystemOverview = () => {
           <NeuCard delay={0.1}>
             <div className="flex items-center gap-3 mb-6">
               <div className="w-12 h-12 rounded-2xl gradient-primary flex items-center justify-center">
-                <span className="text-xl text-white">📋</span>
-              </div>
+<FileText className="w-5 h-5 text-white" />              </div>
               <h3 className="text-xl font-bold" style={{ color: "#49225B" }}>System Manages</h3>
             </div>
             <div className="grid grid-cols-2 gap-3">
@@ -489,7 +499,7 @@ const SystemOverview = () => {
           <NeuCard delay={0.2}>
             <div className="flex items-center gap-3 mb-6">
               <div className="w-12 h-12 rounded-2xl gradient-accent flex items-center justify-center">
-                <span className="text-xl text-white">🎯</span>
+                <Target className="w-5 h-5 text-white" />
               </div>
               <h3 className="text-xl font-bold" style={{ color: "#49225B" }}>Key Objectives</h3>
             </div>
@@ -550,10 +560,10 @@ const securityFeatures = [
   "JWT token expiration and refresh",
 ];
 const trustBadges = [
-  { icon: "🛡️", label: "99.99% Uptime SLA" },
-  { icon: "📋", label: "ISO 27001" },
-  { icon: "🏥", label: "HIPAA Ready" },
-  { icon: "🔧", label: "24/7 Support" },
+  { icon: ShieldCheck, label: "99.99% Uptime SLA" },
+  { icon: FileText, label: "ISO 27001" },
+  { icon: HeartPulse, label: "HIPAA Ready" },
+  { icon: Wrench, label: "24/7 Support" },
 ];
 
 const SecurityTechStack = () => {
@@ -662,7 +672,7 @@ const SecurityTechStack = () => {
               whileHover={{ y: -6, boxShadow: "0 0 40px rgba(165,106,189,0.25)" }}
             >
               <div className="w-12 h-12 mx-auto mb-3 rounded-2xl gradient-accent flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-                {badge.icon}
+                <badge.icon className="w-6 h-6 text-white" />
               </div>
               <span className="text-sm font-bold" style={{ color: "#49225B" }}>{badge.label}</span>
             </motion.div>
@@ -681,28 +691,28 @@ const roles = [
   {
     title: "Admin",
     desc: "Super user with full monitoring access",
-    icon: "👑",
+    icon: Crown,
     gradient: "linear-gradient(135deg, #49225B, #6E3482)",
     features: ["Full system access", "User management", "Analytics dashboard"]
   },
   {
     title: "Manager",
     desc: "Create projects, sets deadlines, upload interns, form teams, assign leaders",
-    icon: "📊",
-    gradient: "linear-gradient(135deg, #6E3482, #A56ABD)",
+    icon: BarChart3,
+    gradient: "linear-gradient(135deg, #49225B, #6E3482)",
     features: ["Project creation", "Team formation", "Deadline management"]
   },
   {
     title: "Team Leader",
     desc: "Execution coordinator, submits daily work reports",
-    icon: "🎯",
-    gradient: "linear-gradient(135deg, #A56ABD, #E7DBEF)",
+    icon: Target,
+    gradient: "linear-gradient(135deg, #6E3482, #49225B)",
     features: ["Daily reporting", "Team coordination", "Progress tracking"]
   },
   {
     title: "Interns",
     desc: "System users under Team Leaders",
-    icon: "👤",
+    icon: User,
     gradient: "linear-gradient(135deg, #6E3482, #49225B)",
     features: ["Task management", "Learning path", "Performance reviews"]
   },
@@ -743,7 +753,7 @@ const SystemRoles = () => {
                 style={{ background: role.gradient }}
                 whileHover={{ rotate: 10, scale: 1.1 }}
               >
-                {role.icon}
+                <role.icon className="w-8 h-8 text-white" />
               </motion.div>
               <h3 className="text-xl font-bold mb-2" style={{ color: "#49225B" }}>{role.title}</h3>
               <p className="text-sm leading-relaxed mb-4" style={{ color: "#6E3482" }}>{role.desc}</p>
@@ -790,12 +800,12 @@ const SystemRoles = () => {
 // \\\\\\\\\\\\\\\\\
 
 const features = [
-  { title: "Secure Access Control", icon: "🔐", desc: "Multi-layer authentication and authorization", color: "#49225B" },
-  { title: "Activity Monitoring", icon: "📡", desc: "Real-time tracking of all system activities", color: "#6E3482" },
-  { title: "Custom Permissions", icon: "⚙️", desc: "Fine-grained permission management", color: "#A56ABD" },
-  { title: "Role Analytics", icon: "📈", desc: "Comprehensive role-based analytics dashboard", color: "#E7DBEF" },
-  { title: "Real-time Reports", icon: "📊", desc: "Instant report generation and sharing", color: "#49225B" },
-  { title: "API Integration", icon: "🔌", desc: "Seamless third-party integrations", color: "#6E3482" },
+  { title: "Secure Access Control", icon: Lock, desc: "Multi-layer authentication and authorization"},
+  { title: "Activity Monitoring", icon: Radio, desc: "Real-time tracking of all system activities" },
+  { title: "Custom Permissions", icon: Settings, desc: "Fine-grained permission management", color: "#49225B" },
+  { title: "Role Analytics", icon: TrendingUp, desc: "Comprehensive role-based analytics dashboard"},
+  { title: "Real-time Reports", icon: BarChart3, desc: "Instant report generation and sharing"},
+  { title: "API Integration", icon: Plug, desc: "Seamless third-party integrations"},
 ];
 
 const FeaturesSection = () => {
@@ -833,13 +843,13 @@ const FeaturesSection = () => {
                 className="text-4xl mb-4 inline-block"
                 whileHover={{ scale: 1.2, rotate: 5 }}
               >
-                {f.icon}
+                <f.icon className="w-10 h-10 mx-auto mb-4 text-purple-600" />
               </motion.div>
-              <h3 className="text-lg font-bold mb-2" style={{ color: f.color }}>{f.title}</h3>
+              <h3 className="text-lg font-bold mb-2" style={{ color: "#49225B" }}>{f.title}</h3>
               <p className="text-sm" style={{ color: "#6E3482" }}>{f.desc}</p>
               <motion.div
                 className="mt-4 w-12 h-0.5 mx-auto rounded-full"
-                style={{ background: f.color }}
+                style={{ background: "#A56ABD" }}
                 initial={{ width: 0 }}
                 whileInView={{ width: 48 }}
                 transition={{ delay: i * 0.1 + 0.3 }}
