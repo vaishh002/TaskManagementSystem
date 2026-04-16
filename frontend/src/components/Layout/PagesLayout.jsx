@@ -6,12 +6,10 @@ import Footer from '../comman/Footer'
 const PagesLayout = () => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
-      {/* Ensure Navbar has proper z-index if it's getting hidden */}
-      <div className="sticky top-0 z-50">
-        <Navbar />
-      </div>
+      <Navbar />
 
-      <main className="flex-grow w-full">
+      {/* pt-20 matches the navbar height (h-20) to push content below the fixed navbar */}
+      <main className="flex-grow w-full pt-">
         <Outlet />
       </main>
 

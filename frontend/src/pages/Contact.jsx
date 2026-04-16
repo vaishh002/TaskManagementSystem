@@ -12,50 +12,31 @@ import {
   HiLightningBolt,
 } from 'react-icons/hi';
 
-/* ── Palette ──────────────────────────────────────────────
-   #49225B  dark plum   (primary dark)
-   #6E3482  deep purple (primary)
-   #A56ABD  medium lilac (accent)
-   #E7DBEF  soft lavender (light bg / tint)
-──────────────────────────────────────────────────────────── */
-
-/* ── Inline SVG Vectors ─────────────────────────────────── */
-
 const HeroVector = () => (
   <svg viewBox="0 0 480 420" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', maxWidth: 480, height: 'auto' }}>
-    {/* Desk */}
     <rect x="60" y="300" width="360" height="18" rx="9" fill="#6E3482" opacity="0.9"/>
     <rect x="90" y="318" width="16" height="60" rx="8" fill="#49225B"/>
     <rect x="374" y="318" width="16" height="60" rx="8" fill="#49225B"/>
-    {/* Monitor */}
     <rect x="140" y="160" width="200" height="130" rx="12" fill="#49225B"/>
     <rect x="150" y="170" width="180" height="110" rx="8" fill="#A56ABD" opacity="0.3"/>
-    {/* Screen content lines */}
     <rect x="165" y="188" width="100" height="8" rx="4" fill="#E7DBEF" opacity="0.8"/>
     <rect x="165" y="204" width="140" height="6" rx="3" fill="#E7DBEF" opacity="0.5"/>
     <rect x="165" y="218" width="120" height="6" rx="3" fill="#E7DBEF" opacity="0.5"/>
     <rect x="165" y="232" width="80" height="6" rx="3" fill="#E7DBEF" opacity="0.5"/>
-    {/* Checkmark badge on screen */}
     <circle cx="290" cy="230" r="22" fill="#6E3482"/>
     <polyline points="280,230 287,237 302,222" stroke="#E7DBEF" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-    {/* Monitor stand */}
     <rect x="228" y="290" width="24" height="14" rx="4" fill="#49225B"/>
     <rect x="210" y="300" width="60" height="6" rx="3" fill="#6E3482"/>
-    {/* Keyboard */}
     <rect x="160" y="316" width="160" height="22" rx="6" fill="#6E3482" opacity="0.7"/>
-    {/* Keys */}
     {[0,1,2,3,4,5,6,7,8,9].map(i => (
       <rect key={i} x={166 + i*15} y="321" width="11" height="8" rx="2" fill="#A56ABD" opacity="0.5"/>
     ))}
-    {/* Mouse */}
     <rect x="334" y="310" width="30" height="22" rx="10" fill="#6E3482" opacity="0.7"/>
     <line x1="349" y1="310" x2="349" y2="332" stroke="#A56ABD" strokeWidth="1.5" opacity="0.6"/>
-    {/* Floating envelope */}
     <g style={{ animation: 'float1 3s ease-in-out infinite' }}>
       <rect x="30" y="130" width="64" height="46" rx="8" fill="#6E3482"/>
       <polyline points="30,130 62,158 94,130" stroke="#E7DBEF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
     </g>
-    {/* Floating chat bubble */}
     <g style={{ animation: 'float2 3.5s ease-in-out infinite' }}>
       <rect x="370" y="100" width="72" height="50" rx="10" fill="#A56ABD"/>
       <circle cx="386" cy="125" r="4" fill="#E7DBEF"/>
@@ -63,7 +44,6 @@ const HeroVector = () => (
       <circle cx="426" cy="125" r="4" fill="#E7DBEF"/>
       <polygon points="380,150 370,162 392,150" fill="#A56ABD"/>
     </g>
-    {/* Floating notification */}
     <g style={{ animation: 'float3 4s ease-in-out infinite' }}>
       <rect x="380" y="220" width="60" height="36" rx="8" fill="#49225B"/>
       <circle cx="396" cy="238" r="8" fill="#A56ABD"/>
@@ -71,7 +51,6 @@ const HeroVector = () => (
       <rect x="410" y="232" width="22" height="5" rx="2.5" fill="#E7DBEF" opacity="0.6"/>
       <rect x="410" y="240" width="16" height="5" rx="2.5" fill="#E7DBEF" opacity="0.4"/>
     </g>
-    {/* Stars/dots decoration */}
     {[[70,80],[420,180],[100,260],[450,290],[50,320]].map(([cx,cy],i) => (
       <circle key={i} cx={cx} cy={cy} r="4" fill="#A56ABD" opacity="0.4"/>
     ))}
@@ -83,26 +62,20 @@ const HeroVector = () => (
 
 const SupportVector = () => (
   <svg viewBox="0 0 340 300" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: 'auto' }}>
-    {/* Person silhouette */}
     <circle cx="170" cy="80" r="44" fill="#6E3482"/>
     <circle cx="170" cy="80" r="36" fill="#A56ABD" opacity="0.5"/>
-    {/* Face */}
     <circle cx="158" cy="76" r="4" fill="#E7DBEF"/>
     <circle cx="182" cy="76" r="4" fill="#E7DBEF"/>
     <path d="M160 90 Q170 98 180 90" stroke="#E7DBEF" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
-    {/* Headset */}
     <path d="M130 72 Q130 46 170 46 Q210 46 210 72" stroke="#49225B" strokeWidth="6" strokeLinecap="round" fill="none"/>
     <rect x="122" y="68" width="16" height="24" rx="8" fill="#49225B"/>
     <rect x="202" y="68" width="16" height="24" rx="8" fill="#49225B"/>
-    {/* Body / shirt */}
     <path d="M110 170 Q110 140 170 140 Q230 140 230 170 L240 260 H100 Z" fill="#6E3482"/>
     <path d="M170 140 L155 165 L170 185 L185 165 Z" fill="#49225B"/>
-    {/* Decorative orbiting dots */}
     <circle cx="80" cy="110" r="10" fill="#A56ABD" opacity="0.5"/>
     <circle cx="260" cy="90" r="10" fill="#A56ABD" opacity="0.5"/>
     <circle cx="70" cy="200" r="7" fill="#E7DBEF" opacity="0.5"/>
     <circle cx="280" cy="190" r="7" fill="#E7DBEF" opacity="0.5"/>
-    {/* Task cards floating */}
     <rect x="20" y="140" width="72" height="52" rx="8" fill="#49225B"/>
     <rect x="30" y="152" width="40" height="5" rx="2.5" fill="#E7DBEF" opacity="0.7"/>
     <rect x="30" y="162" width="52" height="5" rx="2.5" fill="#A56ABD" opacity="0.5"/>
@@ -116,7 +89,6 @@ const SupportVector = () => (
   </svg>
 );
 
-/* ── Main Component ─────────────────────────────────────── */
 const Contact = () => {
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
@@ -142,41 +114,45 @@ const Contact = () => {
         <div className="hero-bg-blob blob2" />
 
         <div className="hero-inner">
-          {/* LEFT */}
-          <div className="hero-left anim-scaleIn">
-            <HeroVector />
-          </div>
+  
+  {/* TEXT LEFT */}
+  <div className="hero-left anim-slideUp">
+    <span className="hero-eyebrow">TASKFLOW — CONTACT US</span>
 
-          {/* RIGHT */}
-          <div className="hero-right anim-slideUp">
-            <span className="hero-eyebrow">TASKFLOW — CONTACT US</span>
-            <h1 className="hero-title">
-              The Best Place Where<br />
-              <span className="hero-title-accent">Productivity Meets Simplicity</span>
-            </h1>
-            <p className="hero-desc">
-              Have questions about TaskFlow? Our dedicated support team is here to help you
-              streamline your project management. We typically respond within 24 hours.
-            </p>
-            <div className="hero-stats">
-              <div className="hero-stat">
-                <span className="hero-stat-num">4.7</span>
-                <span className="hero-stat-label">★★★★★ From Google</span>
-              </div>
-              <div className="hero-stat-divider" />
-              <div className="hero-stat">
-                <span className="hero-stat-num">&lt;24h</span>
-                <span className="hero-stat-label">Avg. Response Time</span>
-              </div>
-            </div>
-            <div className="hero-actions">
-              <a href="#contact-form" className="btn-primary">GET IN TOUCH</a>
-              <a href="#our-support" className="btn-outline">EXPLORE SUPPORT</a>
-            </div>
-          </div>
-        </div>
+    <h1 className="hero-title">
+      The Best Place Where<br />
+      <span className="hero-title-accent">Productivity Meets Simplicity</span>
+    </h1>
 
-        {/* Wave */}
+    <p className="hero-desc">
+      Have questions about TaskFlow? Our dedicated support team is here to help you streamline your project management. We typically respond within 24 hours.
+    </p>
+
+    <div className="hero-stats">
+      <div className="hero-stat">
+        <span className="hero-stat-num">4.7</span>
+        <span className="hero-stat-label">★★★★★ From Google</span>
+      </div>
+      <div className="hero-stat-divider" />
+      <div className="hero-stat">
+        <span className="hero-stat-num">&lt;24h</span>
+        <span className="hero-stat-label">Avg. Response Time</span>
+      </div>
+    </div>
+
+    <div className="hero-actions">
+      <a href="#contact-form" className="btn-primary">GET IN TOUCH</a>
+      <a href="#our-support" className="btn-outline">EXPLORE SUPPORT</a>
+    </div>
+  </div>
+
+  {/* VECTOR RIGHT */}
+  <div className="hero-right anim-scaleIn">
+    <HeroVector />
+  </div>
+
+</div>
+
         <div className="hero-wave">
           <svg viewBox="0 0 1440 90" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
             <path d="M0,45 C200,90 400,0 600,45 C800,90 1000,0 1200,45 C1350,80 1400,30 1440,45 L1440,90 L0,90 Z" fill="#ffffff"/>
@@ -187,7 +163,6 @@ const Contact = () => {
       {/* ══ ABOUT / SUPPORT SECTION ══════════════════════ */}
       <section className="about-section" id="our-support">
         <div className="about-inner">
-          {/* LEFT — illustration */}
           <div className="about-left anim-slideRight">
             <div className="about-img-card">
               <div className="about-img-badge">
@@ -197,8 +172,6 @@ const Contact = () => {
               <SupportVector />
             </div>
           </div>
-
-          {/* RIGHT — text */}
           <div className="about-right anim-slideUp">
             <span className="section-eyebrow">ABOUT US</span>
             <h2 className="section-title">We Can Help You Manage Tasks More Effectively!</h2>
@@ -225,7 +198,6 @@ const Contact = () => {
         </div>
       </section>
 
-      {/* Wave between sections */}
       <div className="section-wave-down">
         <svg viewBox="0 0 1440 70" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
           <path d="M0,35 C360,70 720,0 1080,35 C1260,52 1380,20 1440,35 L1440,70 L0,70 Z" fill="#E7DBEF"/>
@@ -294,7 +266,6 @@ const Contact = () => {
         </div>
       </section>
 
-      {/* Wave up */}
       <div className="section-wave-up">
         <svg viewBox="0 0 1440 70" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
           <path d="M0,35 C360,0 720,70 1080,35 C1260,18 1380,50 1440,35 L1440,70 L0,70 Z" fill="#f9f6fc"/>
@@ -304,8 +275,6 @@ const Contact = () => {
       {/* ══ MAIN CONTACT FORM SECTION ════════════════════ */}
       <section className="main-section" id="contact-form">
         <div className="main-inner">
-
-          {/* LEFT — Contact Info */}
           <div className="left-col anim-slideRight">
             <span className="section-eyebrow">CONTACT US</span>
             <h2 className="section-title">Get In Touch</h2>
@@ -313,7 +282,6 @@ const Contact = () => {
               Have questions or need support? Reach out through any of the channels below.
               Our team is ready to assist you every step of the way.
             </p>
-
             <div className="info-grid">
               {[
                 { icon: <HiOutlinePhone className="info-icon" />, label: 'Phone Number',  value: '+1 (555) 123-4567' },
@@ -330,8 +298,6 @@ const Contact = () => {
                 </div>
               ))}
             </div>
-
-            {/* Hours card */}
             <div className="hours-card anim-scaleIn">
               <div className="hours-orb orb1" />
               <div className="hours-orb orb2" />
@@ -353,8 +319,6 @@ const Contact = () => {
                 <p className="hours-note">For urgent inquiries, use the form — we respond within 24 hours.</p>
               </div>
             </div>
-
-            {/* Quick response */}
             <div className="quick-card anim-fadeIn">
               <div className="quick-icon-wrap">
                 <HiOutlineSparkles style={{ width: 22, height: 22, color: '#6E3482' }} />
@@ -365,12 +329,10 @@ const Contact = () => {
             </div>
           </div>
 
-          {/* RIGHT — Form */}
           <div className="form-card anim-scaleIn">
             <div className="form-accent-bar" />
             <h2 className="form-title">You Have <span className="form-title-accent">Questions?</span></h2>
             <p className="form-sub">Fill out the form below and we'll get back to you as soon as possible.</p>
-
             <form onSubmit={handleSubmit} className="form-body">
               {[
                 { name: 'name',    placeholder: 'Your Full Name',    type: 'text'  },
@@ -413,7 +375,7 @@ const Contact = () => {
         </div>
       </section>
 
-      {/* ══ COMFORT / BENEFITS STRIP ══════════════════════ */}
+      {/* ══ BENEFITS STRIP ═══════════════════════════════ */}
       <section className="benefits-section">
         <div className="benefits-inner">
           <div className="benefits-left">
@@ -457,7 +419,6 @@ const Contact = () => {
 
       {/* ══ STYLES ══════════════════════════════════════ */}
       <style jsx>{`
-        /* Variables */
         :root {
           --plum:    #49225B;
           --purple:  #6E3482;
@@ -473,12 +434,23 @@ const Contact = () => {
           overflow-x: hidden;
           font-family: 'Segoe UI', system-ui, sans-serif;
         }
+        * {
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
 
-        /* ── HERO ── */
+        /* ── HERO ──────────────────────────────────────────
+         * min-height: 660px  — taller than before (was 520px)
+         *   gives the navbar visible sky above the content
+         *
+         * hero-inner padding-top: 160px
+         *   = navbar height (~64px) + top gap (~16px) + 80px breathing room
+         *   so the text/vector sits comfortably below the pill
+         * ─────────────────────────────────────────────────*/
         .hero {
           width: 100%;
-          min-height: 520px;
-          background: linear-gradient(135deg, var(--plum) 0%, var(--purple) 55%, var(--lilac) 100%);
+          min-height: 660px;
+          background: linear-gradient(135deg, var(--purple) 0%, var(--plum) 55%, var(--lilac) 100%);
           position: relative;
           overflow: hidden;
           display: flex;
@@ -496,7 +468,9 @@ const Contact = () => {
         .hero-inner {
           max-width: 1200px;
           width: 100%;
-          padding: 80px 40px 100px;
+          /* top: 160px clears the floating navbar + gives breathing room */
+          /* bottom: 120px ensures wave doesn't overlap content           */
+          padding: 160px 40px 120px;
           display: flex;
           align-items: center;
           gap: 60px;
@@ -506,16 +480,21 @@ const Contact = () => {
         }
         .hero-left {
           flex: 1 1 340px;
-          max-width: 460px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
+           max-width: 520px;
+  
+         }
+        
         .hero-right {
-          flex: 1 1 340px;
-          max-width: 520px;
-          color: var(--white);
-        }
+         flex: 1 1 340px;
+         max-width: 600px;
+         display: flex;
+         justify-content: center;
+         }
+
+         .hero-right svg {
+          width: 100%;
+          max-width: 600px;
+         }
         .hero-eyebrow {
           display: inline-block;
           font-size: 0.7rem;
@@ -526,19 +505,20 @@ const Contact = () => {
           margin-bottom: 14px;
         }
         .hero-title {
-          font-size: clamp(1.8rem, 3.5vw, 2.8rem);
-          font-weight: 900;
-          color: var(--white);
-          line-height: 1.18;
-          margin: 0 0 16px;
+        font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+         font-weight: 900;
+         color: var(--white);
+         line-height: 1.22;
+         margin: 0 0 14px;
+         max-width: 520px; /* controls breaking */
         }
         .hero-title-accent { color: var(--lavender); }
         .hero-desc {
           font-size: 0.96rem;
           color: rgba(231,219,239,0.85);
-          line-height: 1.75;
+          line-height: 1.55;
           margin: 0 0 28px;
-          max-width: 440px;
+          max-width: 520px;
         }
         .hero-stats {
           display: flex;
@@ -577,6 +557,7 @@ const Contact = () => {
           text-decoration: none;
           transition: all 0.25s ease;
           box-shadow: 0 4px 20px rgba(73,34,91,0.3);
+          white-space: nowrap;
         }
         .btn-primary:hover {
           background: var(--lavender);
@@ -595,11 +576,13 @@ const Contact = () => {
           border: 2px solid rgba(255,255,255,0.5);
           text-decoration: none;
           transition: all 0.25s ease;
+          white-space: nowrap;
         }
         .btn-outline:hover {
           border-color: var(--white);
           background: rgba(255,255,255,0.1);
-          transform: translateY(-2px);
+          transform: translate3d(0, -2px, 0);
+          will-change: transform;
         }
         .hero-wave {
           position: absolute;
@@ -677,17 +660,8 @@ const Contact = () => {
           padding: 10px 18px;
           border-radius: 9999px;
         }
-        .about-contact-details {
-          display: flex;
-          align-items: center;
-          gap: 20px;
-          flex-wrap: wrap;
-        }
-        .about-phone {
-          font-size: 1.4rem;
-          font-weight: 900;
-          color: var(--plum);
-        }
+        .about-contact-details { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+        .about-phone { font-size: 1.4rem; font-weight: 900; color: var(--plum); }
         .btn-small {
           display: inline-block;
           background: var(--purple);
@@ -700,7 +674,7 @@ const Contact = () => {
           text-decoration: none;
           transition: all 0.25s ease;
         }
-        .btn-small:hover { background: var(--plum); transform: translateY(-2px); }
+        .btn-small:hover { background: var(--plum); transform: translate3d(0, -2px, 0); will-change: transform;; }
 
         /* ── WAVE dividers ── */
         .section-wave-down { line-height: 0; background: var(--white); }
@@ -709,20 +683,9 @@ const Contact = () => {
         .section-wave-up svg { display: block; width: 100%; height: 70px; }
 
         /* ── SERVICES ── */
-        .services-section {
-          background: var(--lavender);
-          padding: 60px 0 80px;
-        }
-        .services-inner {
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 0 40px;
-        }
-        .services-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 28px;
-        }
+        .services-section { background: var(--lavender); padding: 60px 0 80px; }
+        .services-inner { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+        .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
         .service-card {
           background: var(--white);
           border-radius: 20px;
@@ -731,23 +694,10 @@ const Contact = () => {
           transition: transform 0.25s ease, box-shadow 0.25s ease;
           cursor: default;
         }
-        .service-card:hover {
-          transform: translateY(-6px);
-          box-shadow: 0 16px 48px rgba(110,52,130,0.16);
-        }
+        .service-card:hover { transform: translate3d(0, -6px, 0); will-change: transform; box-shadow: 0 16px 48px rgba(110,52,130,0.16); }
         .service-icon { margin-bottom: 20px; }
-        .service-title {
-          font-size: 1.05rem;
-          font-weight: 800;
-          color: var(--plum);
-          margin: 0 0 12px;
-        }
-        .service-desc {
-          font-size: 0.87rem;
-          color: #7a6685;
-          line-height: 1.7;
-          margin: 0 0 16px;
-        }
+        .service-title { font-size: 1.05rem; font-weight: 800; color: var(--plum); margin: 0 0 12px; }
+        .service-desc { font-size: 0.87rem; color: #7a6685; line-height: 1.7; margin: 0 0 16px; }
         .service-tag {
           display: inline-block;
           background: var(--lavender);
@@ -769,37 +719,20 @@ const Contact = () => {
           gap: 52px;
           align-items: start;
         }
-
-        /* Info cards */
-        .info-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 20px;
-          margin-bottom: 32px;
-        }
-        .info-card {
-          display: flex;
-          align-items: flex-start;
-          gap: 12px;
-          cursor: default;
-          transition: transform 0.2s ease;
-        }
-        .info-card:hover { transform: translateX(4px); }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 32px; }
+        .info-card { display: flex; align-items: flex-start; gap: 12px; cursor: default; transition: transform 0.2s ease; }
+        .info-card:hover { transform: translate3d(0, 4px, 0); will-change: transform; }
         .info-icon-wrap {
           width: 46px; height: 46px;
           border-radius: 12px;
           background: linear-gradient(135deg, var(--lavender), #e0cceb);
           border: 1.5px solid #d0bedd;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          display: flex; align-items: center; justify-content: center;
           flex-shrink: 0;
         }
         .info-icon { width: 20px; height: 20px; color: var(--purple); }
         .info-label { font-weight: 700; color: var(--plum); font-size: 0.85rem; margin: 0 0 3px; }
         .info-value { color: #7a6685; font-size: 0.8rem; margin: 0; line-height: 1.5; }
-
-        /* Hours */
         .hours-card {
           background: linear-gradient(135deg, var(--plum) 0%, var(--purple) 100%);
           border-radius: 18px;
@@ -810,13 +743,9 @@ const Contact = () => {
           box-shadow: 0 12px 40px rgba(73,34,91,0.3);
           margin-bottom: 20px;
         }
-        .hours-orb {
-          position: absolute;
-          border-radius: 50%;
-          background: rgba(255,255,255,0.08);
-        }
+        .hours-orb { position: absolute; border-radius: 50%; background: rgba(255,255,255,0.08); }
         .orb1 { width: 120px; height: 120px; top: -40px; right: -40px; }
-        .orb2 { width: 80px;  height: 80px;  bottom: -20px; left: -20px; }
+        .orb2 { width: 80px; height: 80px; bottom: -20px; left: -20px; }
         .hours-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
         .hours-title { font-size: 1.05rem; font-weight: 800; margin: 0; }
         .hours-row {
@@ -829,25 +758,16 @@ const Contact = () => {
         }
         .hours-row:last-of-type { border-bottom: none; }
         .hours-value { font-weight: 700; color: var(--lilac); }
-        .hours-note {
-          margin: 16px 0 0;
-          font-size: 0.8rem;
-          color: rgba(231,219,239,0.65);
-          line-height: 1.6;
-        }
-
-        /* Quick */
+        .hours-note { margin: 16px 0 0; font-size: 0.8rem; color: rgba(231,219,239,0.65); line-height: 1.6; }
         .quick-card {
           background: var(--white);
           border-radius: 14px;
           padding: 18px 22px;
           border: 1.5px solid #d8c8e4;
-          display: flex;
-          align-items: center;
-          gap: 14px;
+          display: flex; align-items: center; gap: 14px;
           transition: transform 0.25s, box-shadow 0.25s;
         }
-        .quick-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(110,52,130,0.12); }
+        .quick-card:hover { transform: translate3d(0, -2px, 0); will-change: transform; box-shadow: 0 8px 24px rgba(110,52,130,0.12); }
         .quick-icon-wrap {
           width: 48px; height: 48px;
           background: linear-gradient(135deg, var(--lavender), #e0cceb);
@@ -857,8 +777,6 @@ const Contact = () => {
         }
         .quick-text { font-size: 0.9rem; color: #7a6685; margin: 0; }
         .quick-hl { font-weight: 800; color: var(--purple); }
-
-        /* Form */
         .form-card {
           background: var(--white);
           border-radius: 22px;
@@ -869,7 +787,7 @@ const Contact = () => {
           overflow: hidden;
           transition: box-shadow 0.3s, transform 0.3s;
         }
-        .form-card:hover { box-shadow: 0 28px 72px rgba(73,34,91,0.16); transform: translateY(-2px); }
+        .form-card:hover { box-shadow: 0 28px 72px rgba(73,34,91,0.16); transform: translate3d(0, -2px, 0); will-change: transform; }
         .form-accent-bar {
           position: absolute; top: 0; left: 0; right: 0;
           height: 4px;
@@ -898,7 +816,7 @@ const Contact = () => {
           border-color: var(--purple);
           box-shadow: 0 0 0 3px rgba(110,52,130,0.14);
           background: var(--white);
-          transform: scale(1.01);
+          // transform: scale(1.01);
         }
         .form-textarea { resize: none; }
         .submit-btn {
@@ -931,10 +849,7 @@ const Contact = () => {
         }
 
         /* ── BENEFITS ── */
-        .benefits-section {
-          background: linear-gradient(135deg, var(--plum), var(--purple));
-          padding: 80px 0;
-        }
+        .benefits-section { background: linear-gradient(135deg, var(--plum), var(--purple)); padding: 80px 0; }
         .benefits-inner {
           max-width: 1200px;
           margin: 0 auto;
@@ -944,19 +859,8 @@ const Contact = () => {
           gap: 60px;
           align-items: center;
         }
-        .benefits-title {
-          font-size: clamp(1.6rem, 2.5vw, 2.2rem);
-          font-weight: 900;
-          color: var(--white);
-          margin: 0 0 16px;
-          line-height: 1.2;
-        }
-        .benefits-desc {
-          font-size: 0.93rem;
-          color: rgba(231,219,239,0.8);
-          line-height: 1.75;
-          margin: 0 0 28px;
-        }
+        .benefits-title { font-size: clamp(1.6rem, 2.5vw, 2.2rem); font-weight: 900; color: var(--white); margin: 0 0 16px; line-height: 1.2; }
+        .benefits-desc { font-size: 0.93rem; color: rgba(231,219,239,0.8); line-height: 1.75; margin: 0 0 28px; }
         .btn-white {
           display: inline-block;
           background: var(--white);
@@ -969,11 +873,9 @@ const Contact = () => {
           text-decoration: none;
           transition: all 0.25s ease;
         }
-        .btn-white:hover { background: var(--lavender); transform: translateY(-2px); }
+        .btn-white:hover { background: var(--lavender); transform: translate3d(0, -2px, 0); will-change: transform; }
         .benefit-card {
-          display: flex;
-          align-items: flex-start;
-          gap: 16px;
+          display: flex; align-items: flex-start; gap: 16px;
           background: rgba(255,255,255,0.1);
           border-radius: 14px;
           padding: 20px 22px;
@@ -982,14 +884,14 @@ const Contact = () => {
           transition: background 0.25s, transform 0.25s;
         }
         .benefit-card:last-child { margin-bottom: 0; }
-        .benefit-card:hover { background: rgba(255,255,255,0.16); transform: translateX(4px); }
+        .benefit-card:hover { background: rgba(255,255,255,0.16); transform: translate3d(0, -4px, 0);
+will-change: transform;; }
         .benefit-icon {
           width: 44px; height: 44px;
           background: rgba(165,106,189,0.3);
           border-radius: 10px;
           display: flex; align-items: center; justify-content: center;
-          color: var(--lavender);
-          flex-shrink: 0;
+          color: var(--lavender); flex-shrink: 0;
         }
         .benefit-title { font-size: 0.95rem; font-weight: 800; color: var(--white); margin: 0 0 5px; }
         .benefit-desc { font-size: 0.83rem; color: rgba(231,219,239,0.75); margin: 0; line-height: 1.5; }
@@ -999,42 +901,35 @@ const Contact = () => {
         .map-iframe { width: 100%; height: 100%; border: none; display: block; }
 
         /* ── ANIMATIONS ── */
-        @keyframes float1 {
-          0%,100% { transform: translateY(0); }
-          50% { transform: translateY(-10px); }
-        }
-        @keyframes float2 {
-          0%,100% { transform: translateY(0); }
-          50% { transform: translateY(-14px); }
-        }
-        @keyframes float3 {
-          0%,100% { transform: translateY(0); }
-          50% { transform: translateY(-8px); }
-        }
-        @keyframes slideUp {
-          from { opacity: 0; transform: translateY(28px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes slideRight {
-          from { opacity: 0; transform: translateX(-24px); }
-          to   { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes scaleIn {
-          from { opacity: 0; transform: scale(0.9); }
-          to   { opacity: 1; transform: scale(1); }
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to   { opacity: 1; }
-        }
+        @keyframes float1 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes float2 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+        @keyframes float3 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        @keyframes slideUp    { from { opacity:0; transform:translateY(28px); }  to { opacity:1; transform:translateY(0); } }
+        @keyframes slideRight { from { opacity:0; transform:translateX(-24px); } to { opacity:1; transform:translateX(0); } }
+        @keyframes scaleIn    { from { opacity:0; transform:scale(0.9); }         to { opacity:1; transform:scale(1); } }
+        @keyframes fadeIn     { from { opacity:0; }                                to { opacity:1; } }
         .anim-slideUp   { animation: slideUp   0.6s ease-out both; }
         .anim-slideRight{ animation: slideRight 0.55s ease-out both; }
         .anim-scaleIn   { animation: scaleIn   0.5s cubic-bezier(0.34,1.56,0.64,1) both; }
         .anim-fadeIn    { animation: fadeIn    0.5s ease-out both; }
+        .anim-slideUp,
+        .anim-slideRight,
+        .anim-scaleIn {
+        will-change: transform, opacity;
+        }
 
         /* ── RESPONSIVE ── */
         @media (max-width: 900px) {
-          .hero-inner, .about-inner, .main-inner, .benefits-inner {
+          .hero {
+            min-height: 600px;
+          }
+          .hero-inner {
+            /* Slightly less padding on tablet since navbar shrinks a touch */
+            padding: 140px 24px 110px;
+            flex-direction: column;
+            gap: 32px;
+          }
+          .about-inner, .main-inner, .benefits-inner {
             grid-template-columns: 1fr;
             padding-left: 24px;
             padding-right: 24px;
@@ -1042,10 +937,28 @@ const Contact = () => {
           .services-grid { grid-template-columns: 1fr; }
           .info-grid { grid-template-columns: 1fr 1fr; }
         }
+
         @media (max-width: 540px) {
+          .hero {
+            min-height: 560px;
+          }
+          .hero-inner {
+            padding: 120px 20px 100px;
+            gap: 24px;
+          }
+          .hero-actions {
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 12px;
+          }
+          .btn-primary, .btn-outline {
+            flex: 1 1 auto;
+            text-align: center;
+            padding: 13px 16px;
+            font-size: 0.78rem;
+          }
           .info-grid { grid-template-columns: 1fr; }
-          .hero-inner { padding: 60px 20px 90px; }
-          .hero-actions { flex-direction: column; align-items: flex-start; }
+          .form-card { padding: 28px 20px 36px; }
         }
       `}</style>
     </div>
