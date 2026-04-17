@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 
 //── Importing your images (place them in the same folder or adjust paths)
-//import heroBg from "./bgimage.png";
+//importin heroBg from "./bgimage.png";
 //import helpIcon from "./help.png";
 //import supportBg from "./support.png";
 //import supportCardBg from "./supportcardbg.png";
