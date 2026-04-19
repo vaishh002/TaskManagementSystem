@@ -22,10 +22,13 @@ import {
   Zap,
 } from "lucide-react";
 
-// ── Import your images (place them in the same folder or adjust paths)
-import heroBg from "./bgimage.png";
-import helpIcon from "./help.png";
-import supportBg from "./support.png";
+//── Importing your images (place them in the same folder or adjust paths)
+//importing heroBg from "./bgimage.png";
+//importing helpIcon from "./help.png";
+//import supportBg from "./support.png";
+//import supportCardBg from "./supportcardbg.png";
+import contactcardbg from "./contactcardbg.png";
+import herosection from "./herosection.png";
 import gettingStartedIcon from "./GettingStartedGuide.png";
 import videoTutorialsIcon from "./Videotutorials.png";
 import faqIcon from "./faq.png";
@@ -33,10 +36,10 @@ import apiIcon from "./api.png";
 import noteIcon from "./note.png";
 
 /* ─── Color Palette
-   #071952  → darkNavy   (primary dark)
-   #088395  → teal       (primary accent)
-   #37B7C3  → lightTeal  (secondary accent)
-   #EBF4F6  → iceBlue    (background / light surface)
+   #49225B  → darkPurple   (primary dark)
+   #6E3482  → medPurple  (primary accent)
+   #A56ABD  → lightPurple (secondary accent)
+   #E7DBEF  → paleLavender (background / light surface)
 ─────────────────────────────────────────────── */
 
 /* ─── Animated Accordion Item ────────────────────────────── */
@@ -51,29 +54,29 @@ const AccordionItem = ({ faq, idx, isOpen, onToggle }) => {
   }, [isOpen]);
 
   const categoryColors = {
-    access: "bg-[#EBF4F6] text-[#071952]",
-    onboarding: "bg-[#EBF4F6] text-[#088395]",
-    projects: "bg-[#EBF4F6] text-[#37B7C3]",
-    reporting: "bg-[#EBF4F6] text-[#071952]",
-    deadlines: "bg-[#EBF4F6] text-[#088395]",
-    general: "bg-[#EBF4F6] text-[#37B7C3]",
+    access: "bg-[#E7DBEF] text-[#49225B]",
+    onboarding: "bg-[#E7DBEF] text-[#6E3482]",
+    projects: "bg-[#E7DBEF] text-[#A56ABD]",
+    reporting: "bg-[#E7DBEF] text-[#49225B]",
+    deadlines: "bg-[#E7DBEF] text-[#6E3482]",
+    general: "bg-[#E7DBEF] text-[#A56ABD]",
   };
 
   const badgeClass =
-    categoryColors[faq.category] || "bg-[#EBF4F6] text-[#071952]";
+    categoryColors[faq.category] || "bg-[#E7DBEF] text-[#49225B]";
 
   return (
     <div
       className={`group bg-white rounded-2xl border transition-all duration-300 overflow-hidden faq-card backdrop-blur-sm ${
         isOpen
-          ? "border-[#37B7C3] shadow-2xl shadow-[#088395]/20 scale-100"
-          : "border-[#EBF4F6] shadow-md hover:shadow-lg hover:border-[#37B7C3] hover:scale-[1.02]"
+          ? "border-[#A56ABD] shadow-2xl shadow-[#6E3482]/20 scale-100"
+          : "border-[#E7DBEF] shadow-md hover:shadow-lg hover:border-[#A56ABD] hover:scale-[1.02]"
       }`}
       style={{ animationDelay: `${idx * 80}ms` }}
     >
       <button
         onClick={onToggle}
-        className="w-full text-left p-5 sm:p-6 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#37B7C3] rounded-2xl transition-all duration-300"
+        className="w-full text-left p-5 sm:p-6 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#A56ABD] rounded-2xl transition-all duration-300"
         aria-expanded={isOpen}
       >
         <div className="flex items-start gap-4">
@@ -81,12 +84,15 @@ const AccordionItem = ({ faq, idx, isOpen, onToggle }) => {
           <div
             className={`shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 icon-bubble ${
               isOpen
-                ? "text-white shadow-lg shadow-[#088395]/30 scale-110"
-                : "bg-[#EBF4F6] text-[#088395] group-hover:bg-[#EBF4F6] group-hover:scale-105"
+                ? "text-white shadow-lg shadow-[#6E3482]/30 scale-110"
+                : "bg-[#E7DBEF] text-[#6E3482] group-hover:bg-[#E7DBEF] group-hover:scale-105"
             }`}
             style={
               isOpen
-                ? { background: "linear-gradient(135deg, #088395, #071952)" }
+                ? {
+                    background:
+                      "linear-gradient(135deg, #e0a8ff 0%,#c46cff 50%,#a855f7 100%)",
+                  }
                 : {}
             }
           >
@@ -101,7 +107,7 @@ const AccordionItem = ({ faq, idx, isOpen, onToggle }) => {
                 {faq.category}
               </span>
             </div>
-            <h3 className="text-base sm:text-lg font-semibold text-[#071952] leading-snug pr-2 group-hover:text-[#088395] transition-colors duration-300">
+            <h3 className="text-base sm:text-lg font-semibold text-[#49225B] leading-snug pr-2 group-hover:text-[#6E3482] transition-colors duration-300">
               {faq.q}
             </h3>
           </div>
@@ -110,12 +116,15 @@ const AccordionItem = ({ faq, idx, isOpen, onToggle }) => {
           <div
             className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 chevron-icon ${
               isOpen
-                ? "text-white rotate-180 shadow-lg shadow-[#088395]/30"
-                : "bg-[#EBF4F6] text-[#37B7C3] group-hover:bg-[#EBF4F6] group-hover:text-[#088395]"
+                ? "text-white rotate-180 shadow-lg shadow-[#6E3482]/30"
+                : "bg-[#E7DBEF] text-[#A56ABD] group-hover:bg-[#E7DBEF] group-hover:text-[#6E3482]"
             }`}
             style={
               isOpen
-                ? { background: "linear-gradient(135deg, #088395, #071952)" }
+                ? {
+                    background:
+                      "linear-gradient(135deg, #e0a8ff 0%,#c46cff 50%,#a855f7 100%)",
+                  }
                 : {}
             }
           >
@@ -133,20 +142,20 @@ const AccordionItem = ({ faq, idx, isOpen, onToggle }) => {
         <div className="px-5 sm:px-6 pb-5 sm:pb-6 pt-2 pl-20 sm:pl-24 answer-content">
           <div
             className="w-12 h-1 rounded-full mb-3 answer-line"
-            style={{ background: "linear-gradient(90deg, #088395, #37B7C3)" }}
+            style={{ background: "linear-gradient(90deg, #d38dea, #A56ABD)" }}
           />
-          <p className="text-[#071952]/70 leading-relaxed text-sm sm:text-base">
+          <p className="text-[#49225B]/70 leading-relaxed text-sm sm:text-base">
             {faq.a}
           </p>
           <div className="mt-4 flex gap-4">
-            <button className="text-xs sm:text-sm text-[#088395] hover:text-[#071952] font-medium flex items-center gap-1.5 group/btn transition-all duration-300 hover:bg-[#EBF4F6] px-3 py-1.5 rounded-lg">
+            <button className="text-xs sm:text-sm text-[#6E3482] hover:text-[#49225B] font-medium flex items-center gap-1.5 group/btn transition-all duration-300 hover:bg-[#E7DBEF] px-3 py-1.5 rounded-lg">
               <Share2
                 size={14}
                 className="group-hover/btn:scale-125 group-hover/btn:rotate-12 transition-transform"
               />
               Share
             </button>
-            <button className="text-xs sm:text-sm text-[#071952]/50 hover:text-[#071952] font-medium flex items-center gap-1.5 group/btn transition-all duration-300 hover:bg-[#EBF4F6] px-3 py-1.5 rounded-lg">
+            <button className="text-xs sm:text-sm text-[#49225B]/50 hover:text-[#49225B] font-medium flex items-center gap-1.5 group/btn transition-all duration-300 hover:bg-[#E7DBEF] px-3 py-1.5 rounded-lg">
               <Bookmark
                 size={14}
                 className="group-hover/btn:scale-125 group-hover/btn:fill-current transition-transform"
@@ -160,7 +169,91 @@ const AccordionItem = ({ faq, idx, isOpen, onToggle }) => {
   );
 };
 
-/* ─── Main Component ──────────────────────────────────────── */
+/* ─── Stats Section with Scroll Reveal ────────────────────────── */
+const StatsSection = () => {
+  const sectionRef = useRef(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.2 },
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  const stats = [
+    { val: "24/7", label: "Support Available", Icon: Clock },
+    { val: "< 2hr", label: "Response Time", Icon: Zap },
+    { val: "98%", label: "Satisfaction Rate", Icon: ThumbsUp },
+  ];
+
+  return (
+    <div ref={sectionRef} className="mt-12 grid grid-cols-3 gap-4">
+      {stats.map(({ val, label, Icon }, i) => (
+        <div
+          key={i}
+          className="text-center p-6 rounded-xl border transition-all duration-500 hover:shadow-2xl hover:scale-105"
+          style={{
+            background: "#F5EBFA",
+            borderColor: "#E7DBEF",
+            opacity: visible ? 1 : 0,
+            transform: visible ? "translateY(0px)" : "translateY(40px)",
+            transition: `opacity 0.6s ease ${i * 150}ms, transform 0.6s ease ${i * 150}ms, box-shadow 0.3s ease, scale 0.3s ease`,
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = "#A56ABD";
+            e.currentTarget.style.boxShadow =
+              "0 20px 40px rgba(110,52,130,0.2)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = "#E7DBEF";
+            e.currentTarget.style.boxShadow = "none";
+          }}
+        >
+          <div className="flex justify-center mb-3">
+            <div
+              className="p-2 rounded-lg"
+              style={{
+                background: "linear-gradient(135deg, #E7DBEF, #D4B8E0)",
+              }}
+            >
+              <Icon
+                className="w-5 h-5"
+                style={{ color: "#6E3482" }}
+                strokeWidth={2}
+              />
+            </div>
+          </div>
+          <div
+            className="text-2xl sm:text-3xl font-bold mb-1"
+            style={{
+              background: "linear-gradient(135deg, #49225B, #6E3482)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            {val}
+          </div>
+          <div
+            className="text-xs sm:text-sm font-medium"
+            style={{ color: "#6E3482" }}
+          >
+            {label}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+//main component
 const Help = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -272,25 +365,34 @@ const Help = () => {
   return (
     <div
       className="min-h-screen w-full flex flex-col relative overflow-hidden"
-      style={{ background: "#EBF4F6" }}
+      style={{ background: "#F5EBFA" }}
     >
       {/* ── HERO SECTION with first image as background ── */}
       <div
         className="relative w-full overflow-hidden"
         style={{
-          backgroundImage: `url(${heroBg})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center top",
-          backgroundRepeat: "no-repeat",
-          minHeight: "420px",
+          backgroundColor: "#49225B",
+          minHeight: "430px",
         }}
       >
-        {/* Dark navy overlay for readability */}
+        {/* site_support_13 vector — palette-tinted */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `url(${herosection})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center top",
+            backgroundRepeat: "no-repeat",
+            opacity: 0.55,
+            filter: "hue-rotate(220deg) saturate(1.5) brightness(0.7)",
+          }}
+        />
+        {/* Palette overlay for readability */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(160deg, rgba(7,25,82,0.82) 0%, rgba(8,131,149,0.70) 60%, rgba(55,183,195,0.55) 100%)",
+              "linear-gradient(160deg, rgba(73,34,91,0.82) 0%, rgba(110,52,130,0.70) 60%, rgba(165,106,189,0.55) 100%)",
           }}
         />
 
@@ -298,53 +400,27 @@ const Help = () => {
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div
             className="absolute -top-20 -right-20 w-72 h-72 rounded-full opacity-20 animate-blob"
-            style={{ background: "#37B7C3", filter: "blur(60px)" }}
+            style={{ background: "#A56ABD", filter: "blur(60px)" }}
           />
           <div
             className="absolute -bottom-20 -left-20 w-72 h-72 rounded-full opacity-20 animate-blob animation-delay-2000"
-            style={{ background: "#088395", filter: "blur(60px)" }}
+            style={{ background: "#6E3482", filter: "blur(60px)" }}
           />
         </div>
 
         {/* Hero Content */}
         <div
-          className="relative z-10 flex flex-col items-center justify-between text-center px-4 pt-10 pb-10 sm:pt-14 sm:pb-12"
-          style={{ minHeight: "420px" }}
+          className="relative z-10 flex flex-col items-center justify-between text-center px-4 pt-28 pb-16 sm:pt-32 sm:pb-20"
+          style={{ minHeight: "480px" }}
         >
-          {/* ── TOP — Logo ── */}
-          <div className="inline-flex items-center justify-center relative animate-slideUp">
-            {/* Glowing ring behind logo */}
-            <div
-              className="absolute inset-0 rounded-2xl blur-2xl opacity-70 animate-pulse"
-              style={{
-                background: "linear-gradient(135deg, #37B7C3, #088395)",
-              }}
-            />
-            <div
-              className="relative w-24 h-24 rounded-2xl flex items-center justify-center shadow-2xl transform hover:scale-110 hover:rotate-3 transition-all duration-300 p-1"
-              style={{
-                background:
-                  "linear-gradient(135deg, #EBF4F6 0%, #37B7C3 50%, #088395 100%)",
-                boxShadow: "0 8px 32px rgba(8,131,149,0.45)",
-              }}
-            >
-              <img
-                src={helpIcon}
-                alt="Help"
-                className="w-16 h-16 object-contain drop-shadow-lg"
-                style={{ filter: "drop-shadow(0 2px 8px rgba(7,25,82,0.3))" }}
-              />
-            </div>
-          </div>
-
           {/* ── BOTTOM — Heading + Subtext + Search ── */}
           <div className="w-full animate-slideUp animation-delay-200">
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-3 leading-tight drop-shadow-lg">
-              How can we <span style={{ color: "#37B7C3" }}>help you?</span>
+              How can we help you?
             </h1>
             <p
               className="text-base sm:text-lg max-w-2xl mx-auto leading-relaxed mb-8"
-              style={{ color: "#EBF4F6", opacity: 0.9 }}
+              style={{ color: "#E7DBEF", opacity: 0.9 }}
             >
               Find answers, get support, and learn how to make the most of
               TaskFlow
@@ -356,7 +432,7 @@ const Help = () => {
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <Search
                     className="w-5 h-5 transition-colors duration-300"
-                    style={{ color: "#088395" }}
+                    style={{ color: "#6E3482" }}
                     strokeWidth={2}
                   />
                 </div>
@@ -365,13 +441,13 @@ const Help = () => {
                   placeholder="Search for answers..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-12 pr-10 py-4 rounded-2xl focus:ring-4 transition-all duration-300 shadow-2xl text-[#071952] outline-none"
+                  className="w-full pl-12 pr-10 py-4 rounded-2xl focus:ring-4 transition-all duration-300 shadow-2xl text-[#49225B] outline-none"
                   style={{
-                    background: "rgba(235,244,246,0.97)",
-                    border: "2px solid #37B7C3",
+                    background: "rgba(231,219,239,0.97)",
+                    border: "2px solid #A56ABD",
                   }}
-                  onFocus={(e) => (e.target.style.borderColor = "#088395")}
-                  onBlur={(e) => (e.target.style.borderColor = "#37B7C3")}
+                  onFocus={(e) => (e.target.style.borderColor = "#6E3482")}
+                  onBlur={(e) => (e.target.style.borderColor = "#A56ABD")}
                 />
                 {searchTerm && (
                   <button
@@ -381,7 +457,7 @@ const Help = () => {
                   >
                     <X
                       className="w-5 h-5 transition-colors"
-                      style={{ color: "#088395" }}
+                      style={{ color: "#6E3482" }}
                     />
                   </button>
                 )}
@@ -389,11 +465,29 @@ const Help = () => {
             </div>
           </div>
         </div>
+
+        {/* ── Wave Divider: Hero → Body ── */}
+        <div
+          className="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-20"
+          style={{ lineHeight: 0 }}
+        >
+          <svg
+            viewBox="0 0 1440 80"
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="none"
+            style={{ display: "block", width: "100%", height: "80px" }}
+          >
+            <path
+              d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z"
+              fill="#F5EBFA"
+            />
+          </svg>
+        </div>
       </div>
       {/* END HERO */}
 
       {/* ── Main Body ── */}
-      <div className="flex-1 w-full px-4 pt-10 pb-20">
+      <div className="flex-1 w-full px-4 pt-10 pb-0">
         <div className="max-w-6xl w-full mx-auto relative z-10">
           {/* ── Category Filters ── */}
           <div className="flex justify-center mb-12 animate-fadeIn animation-delay-400">
@@ -410,26 +504,26 @@ const Help = () => {
                       <div
                         className="w-14 h-14 rounded-full flex items-center justify-center border-2 transition-all duration-300 category-bubble"
                         style={{
-                          borderColor: isActive ? "#088395" : "#37B7C3",
+                          borderColor: isActive ? "#6E3482" : "#A56ABD",
                           background: isActive
-                            ? "linear-gradient(135deg, #EBF4F6, #d0ecf0)"
+                            ? "linear-gradient(135deg, #E7DBEF, #D4B8E0)"
                             : "white",
                           transform: isActive ? "scale(1.1)" : "scale(1)",
                           boxShadow: isActive
-                            ? "0 8px 24px rgba(8,131,149,0.25)"
+                            ? "0 8px 24px rgba(110,52,130,0.25)"
                             : "none",
                         }}
                       >
                         <cat.Icon
                           size={20}
                           strokeWidth={isActive ? 2.5 : 2}
-                          style={{ color: isActive ? "#071952" : "#37B7C3" }}
+                          style={{ color: isActive ? "#49225B" : "#A56ABD" }}
                         />
                       </div>
                       <span
                         className="text-xs font-semibold tracking-wide transition-all duration-300"
                         style={{
-                          color: isActive ? "#071952" : "#088395",
+                          color: isActive ? "#49225B" : "#6E3482",
                           fontWeight: isActive ? 700 : 600,
                         }}
                       >
@@ -445,8 +539,8 @@ const Help = () => {
                             background:
                               selectedCategory === cat.value ||
                               selectedCategory === categories[idx + 1].value
-                                ? "linear-gradient(90deg, #088395, #37B7C3)"
-                                : "#EBF4F6",
+                                ? "linear-gradient(90deg, #6E3482, #A56ABD)"
+                                : "#E7DBEF",
                           }}
                         />
                         <div
@@ -455,8 +549,8 @@ const Help = () => {
                             background:
                               selectedCategory === cat.value ||
                               selectedCategory === categories[idx + 1].value
-                                ? "#071952"
-                                : "#37B7C3",
+                                ? "#49225B"
+                                : "#A56ABD",
                             transform:
                               selectedCategory === cat.value ||
                               selectedCategory === categories[idx + 1].value
@@ -470,8 +564,8 @@ const Help = () => {
                             background:
                               selectedCategory === cat.value ||
                               selectedCategory === categories[idx + 1].value
-                                ? "linear-gradient(90deg, #37B7C3, #088395)"
-                                : "#EBF4F6",
+                                ? "linear-gradient(90deg, #A56ABD, #6E3482)"
+                                : "#E7DBEF",
                           }}
                         />
                       </div>
@@ -488,24 +582,24 @@ const Help = () => {
               className="flex-1 h-px"
               style={{
                 background:
-                  "linear-gradient(90deg, transparent, #37B7C3, transparent)",
+                  "linear-gradient(90deg, transparent, #A56ABD, transparent)",
               }}
             />
             <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4" style={{ color: "#088395" }} />
+              <Sparkles className="w-4 h-4" style={{ color: "#6E3482" }} />
               <span
                 className="text-sm font-semibold uppercase tracking-widest whitespace-nowrap"
-                style={{ color: "#071952" }}
+                style={{ color: "#49225B" }}
               >
                 Frequently Asked Questions
               </span>
-              <Sparkles className="w-4 h-4" style={{ color: "#088395" }} />
+              <Sparkles className="w-4 h-4" style={{ color: "#6E3482" }} />
             </div>
             <div
               className="flex-1 h-px"
               style={{
                 background:
-                  "linear-gradient(90deg, transparent, #37B7C3, transparent)",
+                  "linear-gradient(90deg, transparent, #A56ABD, transparent)",
               }}
             />
           </div>
@@ -527,90 +621,115 @@ const Help = () => {
                 <div
                   className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 animate-bounce"
                   style={{
-                    background: "linear-gradient(135deg, #EBF4F6, #d0ecf0)",
+                    background: "linear-gradient(135deg, #E7DBEF, #D4B8E0)",
                   }}
                 >
-                  <Search className="w-8 h-8" style={{ color: "#37B7C3" }} />
+                  <Search className="w-8 h-8" style={{ color: "#A56ABD" }} />
                 </div>
                 <h3
                   className="text-xl font-semibold mb-2"
-                  style={{ color: "#071952" }}
+                  style={{ color: "#49225B" }}
                 >
                   No results found
                 </h3>
-                <p style={{ color: "#088395" }}>
+                <p style={{ color: "#6E3482" }}>
                   Try adjusting your search or browse by category
                 </p>
               </div>
             )}
           </div>
+        </div>
+      </div>
 
+      {/* ── Wave Top: FAQ → Support ── */}
+      <div
+        className="w-full overflow-hidden leading-none"
+        style={{ lineHeight: 0, marginTop: "-2px" }}
+      >
+        <svg
+          viewBox="0 0 1440 80"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="none"
+          style={{ display: "block", width: "100%", height: "80px" }}
+        >
+          <path
+            d="M0,0 C480,80 960,0 1440,60 L1440,80 L0,80 Z"
+            fill="#49225B"
+          />
+        </svg>
+      </div>
+
+      {/* ── Support + Stats dark section ── */}
+      <div className="w-full px-4 pt-8 pb-0" style={{ background: "#49225B" }}>
+        <div className="max-w-6xl w-full mx-auto">
           {/* ── Support Cards ── */}
           <div className="grid md:grid-cols-2 gap-6 mt-8">
-            {/* Contact Support Card — support.png full background, centered text */}
+            {/* Contact Support Card — contactcardbg.jpg background, original colors preserved */}
             <div
-              className="group rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-2 animate-slideUp animation-delay-500 relative overflow-hidden flex flex-col"
+              className="group rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-2 animate-slideUp animation-delay-500 relative overflow-hidden flex flex-col items-center justify-center"
               style={{
-                backgroundImage: `url(${supportBg})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
                 minHeight: "320px",
               }}
             >
-              {/* Dark navy-to-teal overlay for readability */}
+              {/* contactcardbg — original colors, no filter */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  backgroundImage: `url(${contactcardbg})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  backgroundRepeat: "no-repeat",
+                }}
+              />
+              {/* Subtle dark overlay just for text readability */}
               <div
                 className="absolute inset-0 transition-opacity duration-300"
                 style={{
-                  background:
-                    "linear-gradient(160deg, rgba(7,25,82,0.55) 0%, rgba(8,131,149,0.50) 100%)",
+                  background: "rgba(110, 41, 143, 0.6)",
                 }}
               />
 
-              {/* TOP — Logo + heading */}
-              <div className="relative z-10 flex flex-col items-center text-center px-8 pt-8">
+              {/* ALL content centered */}
+              <div className="relative z-10 flex flex-col items-center justify-center text-center px-8 py-10 gap-5 w-full">
+                {/* Icon — centered */}
                 <div
-                  className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-125 transition-transform duration-300"
+                  className="w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-125 transition-transform"
                   style={{
-                    background: "rgba(235,244,246,0.20)",
+                    background: "rgba(231,219,239,0.20)",
                     backdropFilter: "blur(8px)",
                   }}
                 >
                   <MessageCircle
-                    className="w-10 h-10 text-white"
+                    className="w-8 h-8 text-white"
                     strokeWidth={1.5}
                   />
                 </div>
-                <h2 className="text-2xl font-bold text-white mb-0">
+
+                {/* Heading — centered */}
+                <h2 className="text-2xl font-bold text-white m-0">
                   Need direct support?
                 </h2>
-              </div>
 
-              {/* MIDDLE — spacer */}
-              <div className="flex-1" />
-
-              {/* BOTTOM — button then description */}
-              <div className="relative z-10 flex flex-col items-center text-center px-8 pb-8 gap-4">
+                {/* Button — centered */}
                 <Link
                   to="/contact"
                   className="inline-flex items-center gap-2 px-8 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 group/link"
-                  style={{ background: "#EBF4F6", color: "#071952" }}
+                  style={{ background: "#E7DBEF", color: "#49225B" }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "#37B7C3";
+                    e.currentTarget.style.background = "#A56ABD";
                     e.currentTarget.style.color = "white";
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "#EBF4F6";
-                    e.currentTarget.style.color = "#071952";
+                    e.currentTarget.style.background = "#E7DBEF";
+                    e.currentTarget.style.color = "#49225B";
                   }}
                 >
                   Contact Support
                   <ArrowRight className="w-5 h-5 group-hover/link:translate-x-2 transition-transform" />
                 </Link>
-                <p
-                  className="text-sm"
-                  style={{ color: "#EBF4F6", opacity: 0.9 }}
-                >
+
+                {/* Description — centered */}
+                <p className="text-sm" style={{ color: "#E7DBEF", opacity: 1 }}>
                   Our team is ready to help you with any questions
                 </p>
               </div>
@@ -622,26 +741,26 @@ const Help = () => {
               style={{
                 minHeight: "320px",
                 background:
-                  "linear-gradient(135deg, #071952 0%, #088395 60%, #37B7C3 100%)",
+                  "linear-gradient(135deg, #49225B 0%, #6E3482 60%, #A56ABD 100%)",
               }}
             >
               {/* Wavy blob decorations */}
               <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div
                   className="absolute -top-16 -left-16 w-64 h-64 rounded-full opacity-25"
-                  style={{ background: "#37B7C3" }}
+                  style={{ background: "#A56ABD" }}
                 />
                 <div
                   className="absolute top-8 right-0 w-48 h-48 rounded-full opacity-20"
-                  style={{ background: "#EBF4F6" }}
+                  style={{ background: "#F5EBFA" }}
                 />
                 <div
                   className="absolute bottom-0 left-1/3 w-56 h-56 rounded-full opacity-15"
-                  style={{ background: "#088395" }}
+                  style={{ background: "#6E3482" }}
                 />
                 <div
                   className="absolute -bottom-10 right-10 w-40 h-40 rounded-full opacity-20"
-                  style={{ background: "#37B7C3" }}
+                  style={{ background: "#A56ABD" }}
                 />
               </div>
 
@@ -678,9 +797,9 @@ const Help = () => {
                       <div
                         className="w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover/item:scale-110 group-hover/item:shadow-xl"
                         style={{
-                          background: "rgba(235,244,246,0.15)",
+                          background: "rgba(231,219,239,0.15)",
                           backdropFilter: "blur(8px)",
-                          border: "1px solid rgba(235,244,246,0.25)",
+                          border: "1px solid rgba(231,219,239,0.25)",
                         }}
                       >
                         <img
@@ -692,7 +811,7 @@ const Help = () => {
                       {/* Label */}
                       <span
                         className="text-xs font-semibold text-center leading-tight transition-colors duration-300 group-hover/item:text-white"
-                        style={{ color: "rgba(235,244,246,0.85)" }}
+                        style={{ color: "rgba(231,219,239,0.85)" }}
                       >
                         {item.label}
                       </span>
@@ -704,63 +823,35 @@ const Help = () => {
           </div>
 
           {/* ── Stats ── */}
-          <div className="mt-12 grid grid-cols-3 gap-4">
-            {[
-              { val: "24/7", label: "Support Available", Icon: Clock },
-              { val: "< 2hr", label: "Response Time", Icon: Zap },
-              { val: "98%", label: "Satisfaction Rate", Icon: ThumbsUp },
-            ].map(({ val, label, Icon }, i) => (
-              <div
-                key={i}
-                className="text-center p-6 animate-scaleIn rounded-xl border transition-all duration-300 hover:shadow-lg transform hover:scale-105"
-                style={{
-                  background: "white",
-                  borderColor: "#EBF4F6",
-                  animationDelay: `${i * 100}ms`,
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = "#37B7C3";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = "#EBF4F6";
-                }}
-              >
-                <div className="flex justify-center mb-3">
-                  <div
-                    className="p-2 rounded-lg"
-                    style={{
-                      background: "linear-gradient(135deg, #EBF4F6, #d0ecf0)",
-                    }}
-                  >
-                    <Icon
-                      className="w-5 h-5"
-                      style={{ color: "#088395" }}
-                      strokeWidth={2}
-                    />
-                  </div>
-                </div>
-                <div
-                  className="text-2xl sm:text-3xl font-bold mb-1"
-                  style={{
-                    background: "linear-gradient(135deg, #071952, #088395)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                  }}
-                >
-                  {val}
-                </div>
-                <div
-                  className="text-xs sm:text-sm font-medium"
-                  style={{ color: "#088395" }}
-                >
-                  {label}
-                </div>
-              </div>
-            ))}
-          </div>
+          <StatsSection />
+        </div>
+        {/* end max-w-6xl */}
+      </div>
+      {/* end dark section */}
 
-          {/* ── Global Styles ── */}
-          <style>{`
+      {/* ── Wave Bottom: Support → Footer ── */}
+      <div
+        className="w-full overflow-hidden leading-none"
+        style={{ lineHeight: 0, background: "#49225B" }}
+      >
+        <svg
+          viewBox="0 0 1440 80"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="none"
+          style={{ display: "block", width: "100%", height: "80px" }}
+        >
+          <path
+            d="M0,60 C480,0 960,80 1440,20 L1440,80 L0,80 Z"
+            fill="#F5EBFA"
+          />
+        </svg>
+      </div>
+
+      {/* bottom spacer */}
+      <div className="w-full pb-10" style={{ background: "#F5EBFA" }} />
+
+      {/* ── Global Styles ── */}
+      <style>{`
             @keyframes blob {
               0%   { transform: translate(0px, 0px) scale(1); }
               33%  { transform: translate(30px, -50px) scale(1.1); }
@@ -808,8 +899,6 @@ const Help = () => {
 
             button, a { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
           `}</style>
-        </div>
-      </div>
     </div>
   );
 };

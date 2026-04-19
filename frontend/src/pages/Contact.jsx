@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   HiOutlineMail,
   HiOutlinePhone,
@@ -12,6 +12,75 @@ import {
   HiLightningBolt,
 } from 'react-icons/hi';
 
+/* ─────────────────────────────────────────────
+   Scroll-reveal hook
+   Returns a ref + boolean `inView`
+   Once visible it stays visible (triggerOnce)
+───────────────────────────────────────────── */
+function useScrollReveal(options = {}) {
+  const ref = useRef(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.unobserve(el); // trigger once
+        }
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -40px 0px', ...options }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return [ref, inView];
+}
+
+/* ─────────────────────────────────────────────
+   Staggered list hook – returns array of booleans
+───────────────────────────────────────────── */
+function useStaggerReveal(count, staggerMs = 120) {
+  const containerRef = useRef(null);
+  const [visible, setVisible] = useState(Array(count).fill(false));
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          observer.unobserve(el);
+          Array.from({ length: count }).forEach((_, i) => {
+            setTimeout(() => {
+              setVisible(prev => {
+                const next = [...prev];
+                next[i] = true;
+                return next;
+              });
+            }, i * staggerMs);
+          });
+        }
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -30px 0px' }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [count, staggerMs]);
+
+  return [containerRef, visible];
+}
+
+/* ─────────────────────────────────────────────
+   SVGs
+───────────────────────────────────────────── */
 const HeroVector = () => (
   <svg viewBox="0 0 480 420" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', maxWidth: 480, height: 'auto' }}>
     <rect x="60" y="300" width="360" height="18" rx="9" fill="#6E3482" opacity="0.9"/>
@@ -89,6 +158,9 @@ const SupportVector = () => (
   </svg>
 );
 
+/* ─────────────────────────────────────────────
+   Main Component
+───────────────────────────────────────────── */
 const Contact = () => {
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
@@ -96,8 +168,7 @@ const Contact = () => {
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
   const handleFocus = (field) => setFocused({ ...focused, [field]: true });
-  const handleBlur = (field) => setFocused({ ...focused, [field]: false });
-
+  const handleBlur  = (field) => setFocused({ ...focused, [field]: false });
   const handleSubmit = (e) => {
     e.preventDefault();
     setSubmitted(true);
@@ -105,53 +176,70 @@ const Contact = () => {
     setFormData({ name: '', email: '', subject: '', message: '' });
   };
 
+  /* — scroll reveal refs — */
+  const [heroTextRef,    heroTextIn]    = useScrollReveal();
+  const [heroImgRef,     heroImgIn]     = useScrollReveal();
+  const [aboutImgRef,    aboutImgIn]    = useScrollReveal();
+  const [aboutTextRef,   aboutTextIn]   = useScrollReveal();
+  const [svcHeadRef,     svcHeadIn]     = useScrollReveal();
+  const [contactLeftRef, contactLeftIn] = useScrollReveal();
+  const [formCardRef,    formCardIn]    = useScrollReveal();
+  const [benLeftRef,     benLeftIn]     = useScrollReveal();
+  const [mapRef,         mapIn]         = useScrollReveal();
+
+  /* staggered grids */
+  const [svcGridRef,  svcVisible]  = useStaggerReveal(3, 130);
+  const [infoGridRef, infoVisible] = useStaggerReveal(4, 100);
+  const [benRightRef, benVisible]  = useStaggerReveal(3, 130);
+
   return (
     <div className="page-root">
 
-      {/* ══ HERO ══════════════════════════════════════════ */}
+      {/* ══ HERO ══ */}
       <section className="hero">
         <div className="hero-bg-blob blob1" />
         <div className="hero-bg-blob blob2" />
-
         <div className="hero-inner">
-  
-  {/* TEXT LEFT */}
-  <div className="hero-left anim-slideUp">
-    <span className="hero-eyebrow">TASKFLOW — CONTACT US</span>
 
-    <h1 className="hero-title">
-      The Best Place Where<br />
-      <span className="hero-title-accent">Productivity Meets Simplicity</span>
-    </h1>
+          <div
+            ref={heroTextRef}
+            className="hero-left"
+            style={revealStyle(heroTextIn, 'slideUp')}
+          >
+            <span className="hero-eyebrow">TASKFLOW — CONTACT US</span>
+            <h1 className="hero-title">
+              The Best Place Where<br />
+              <span className="hero-title-accent">Productivity Meets Simplicity</span>
+            </h1>
+            <p className="hero-desc">
+              Have questions about TaskFlow? Our dedicated support team is here to help you
+              streamline your project management. We typically respond within 24 hours.
+            </p>
+            <div className="hero-stats">
+              <div className="hero-stat">
+                <span className="hero-stat-num">4.7</span>
+                <span className="hero-stat-label">★★★★★ From Google</span>
+              </div>
+              <div className="hero-stat-divider" />
+              <div className="hero-stat">
+                <span className="hero-stat-num">&lt;24h</span>
+                <span className="hero-stat-label">Avg. Response Time</span>
+              </div>
+            </div>
+            <div className="hero-actions">
+              <a href="#contact-form" className="btn-primary">GET IN TOUCH</a>
+              <a href="#our-support" className="btn-outline">EXPLORE SUPPORT</a>
+            </div>
+          </div>
 
-    <p className="hero-desc">
-      Have questions about TaskFlow? Our dedicated support team is here to help you streamline your project management. We typically respond within 24 hours.
-    </p>
-
-    <div className="hero-stats">
-      <div className="hero-stat">
-        <span className="hero-stat-num">4.7</span>
-        <span className="hero-stat-label">★★★★★ From Google</span>
-      </div>
-      <div className="hero-stat-divider" />
-      <div className="hero-stat">
-        <span className="hero-stat-num">&lt;24h</span>
-        <span className="hero-stat-label">Avg. Response Time</span>
-      </div>
-    </div>
-
-    <div className="hero-actions">
-      <a href="#contact-form" className="btn-primary">GET IN TOUCH</a>
-      <a href="#our-support" className="btn-outline">EXPLORE SUPPORT</a>
-    </div>
-  </div>
-
-  {/* VECTOR RIGHT */}
-  <div className="hero-right anim-scaleIn">
-    <HeroVector />
-  </div>
-
-</div>
+          <div
+            ref={heroImgRef}
+            className="hero-right"
+            style={revealStyle(heroImgIn, 'scaleIn', 120)}
+          >
+            <HeroVector />
+          </div>
+        </div>
 
         <div className="hero-wave">
           <svg viewBox="0 0 1440 90" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
@@ -160,10 +248,14 @@ const Contact = () => {
         </div>
       </section>
 
-      {/* ══ ABOUT / SUPPORT SECTION ══════════════════════ */}
+      {/* ══ ABOUT ══ */}
       <section className="about-section" id="our-support">
         <div className="about-inner">
-          <div className="about-left anim-slideRight">
+          <div
+            ref={aboutImgRef}
+            className="about-left"
+            style={revealStyle(aboutImgIn, 'slideRight')}
+          >
             <div className="about-img-card">
               <div className="about-img-badge">
                 <HiShieldCheck style={{ width: 18, height: 18 }} />
@@ -172,7 +264,12 @@ const Contact = () => {
               <SupportVector />
             </div>
           </div>
-          <div className="about-right anim-slideUp">
+
+          <div
+            ref={aboutTextRef}
+            className="about-right"
+            style={revealStyle(aboutTextIn, 'slideUp', 100)}
+          >
             <span className="section-eyebrow">ABOUT US</span>
             <h2 className="section-title">We Can Help You Manage Tasks More Effectively!</h2>
             <p className="section-desc">
@@ -204,16 +301,19 @@ const Contact = () => {
         </svg>
       </div>
 
-      {/* ══ SERVICES / CHANNELS ══════════════════════════ */}
+      {/* ══ SERVICES ══ */}
       <section className="services-section">
         <div className="services-inner">
-          <span className="section-eyebrow centered">OUR SUPPORT CHANNELS</span>
-          <h2 className="section-title centered">Best Convenience Services</h2>
-          <p className="section-desc centered" style={{ maxWidth: 580, margin: '0 auto 48px' }}>
-            Reach us through the channel that suits you best. We've made every touchpoint
-            as smooth and responsive as possible.
-          </p>
-          <div className="services-grid">
+          <div ref={svcHeadRef} style={revealStyle(svcHeadIn, 'fadeIn')}>
+            <span className="section-eyebrow centered">OUR SUPPORT CHANNELS</span>
+            <h2 className="section-title centered">Best Convenience Services</h2>
+            <p className="section-desc centered" style={{ maxWidth: 580, margin: '0 auto 48px' }}>
+              Reach us through the channel that suits you best. We've made every touchpoint
+              as smooth and responsive as possible.
+            </p>
+          </div>
+
+          <div className="services-grid" ref={svcGridRef}>
             {[
               {
                 icon: (
@@ -255,7 +355,11 @@ const Contact = () => {
                 tag: 'help.taskflow.com',
               },
             ].map((s, i) => (
-              <div key={i} className="service-card anim-fadeIn" style={{ animationDelay: `${i * 120}ms` }}>
+              <div
+                key={i}
+                className="service-card"
+                style={revealStyle(svcVisible[i], 'slideUp', i * 60)}
+              >
                 <div className="service-icon">{s.icon}</div>
                 <h3 className="service-title">{s.title}</h3>
                 <p className="service-desc">{s.desc}</p>
@@ -272,24 +376,34 @@ const Contact = () => {
         </svg>
       </div>
 
-      {/* ══ MAIN CONTACT FORM SECTION ════════════════════ */}
+      {/* ══ CONTACT FORM SECTION ══ */}
       <section className="main-section" id="contact-form">
         <div className="main-inner">
-          <div className="left-col anim-slideRight">
+
+          <div
+            ref={contactLeftRef}
+            className="left-col"
+            style={revealStyle(contactLeftIn, 'slideRight')}
+          >
             <span className="section-eyebrow">CONTACT US</span>
             <h2 className="section-title">Get In Touch</h2>
             <p className="section-desc">
               Have questions or need support? Reach out through any of the channels below.
               Our team is ready to assist you every step of the way.
             </p>
-            <div className="info-grid">
+
+            <div className="info-grid" ref={infoGridRef}>
               {[
                 { icon: <HiOutlinePhone className="info-icon" />, label: 'Phone Number',  value: '+1 (555) 123-4567' },
                 { icon: <HiOutlineMail  className="info-icon" />, label: 'Email Address', value: 'support@taskflow.com' },
                 { icon: <HiGlobe        className="info-icon" />, label: 'Website',       value: 'www.taskflow.com' },
                 { icon: <HiLocationMarker className="info-icon" />, label: 'Address',     value: '123 Innovation Dr, Tech Valley, CA' },
               ].map((item, i) => (
-                <div key={i} className="info-card anim-fadeIn" style={{ animationDelay: `${i * 100}ms` }}>
+                <div
+                  key={i}
+                  className="info-card"
+                  style={revealStyle(infoVisible[i], 'fadeUp', i * 60)}
+                >
                   <div className="info-icon-wrap">{item.icon}</div>
                   <div>
                     <p className="info-label">{item.label}</p>
@@ -298,7 +412,8 @@ const Contact = () => {
                 </div>
               ))}
             </div>
-            <div className="hours-card anim-scaleIn">
+
+            <div className="hours-card">
               <div className="hours-orb orb1" />
               <div className="hours-orb orb2" />
               <div style={{ position: 'relative', zIndex: 2 }}>
@@ -319,7 +434,8 @@ const Contact = () => {
                 <p className="hours-note">For urgent inquiries, use the form — we respond within 24 hours.</p>
               </div>
             </div>
-            <div className="quick-card anim-fadeIn">
+
+            <div className="quick-card">
               <div className="quick-icon-wrap">
                 <HiOutlineSparkles style={{ width: 22, height: 22, color: '#6E3482' }} />
               </div>
@@ -329,13 +445,17 @@ const Contact = () => {
             </div>
           </div>
 
-          <div className="form-card anim-scaleIn">
+          <div
+            ref={formCardRef}
+            className="form-card"
+            style={revealStyle(formCardIn, 'slideUp', 150)}
+          >
             <div className="form-accent-bar" />
             <h2 className="form-title">You Have <span className="form-title-accent">Questions?</span></h2>
             <p className="form-sub">Fill out the form below and we'll get back to you as soon as possible.</p>
             <form onSubmit={handleSubmit} className="form-body">
               {[
-                { name: 'name',    placeholder: 'Your Full Name',    type: 'text'  },
+                { name: 'name',    placeholder: 'Your Full Name',     type: 'text'  },
                 { name: 'email',   placeholder: 'Your Email Address', type: 'email' },
                 { name: 'subject', placeholder: 'Subject / Topic',    type: 'text'  },
               ].map((f) => (
@@ -375,10 +495,14 @@ const Contact = () => {
         </div>
       </section>
 
-      {/* ══ BENEFITS STRIP ═══════════════════════════════ */}
+      {/* ══ BENEFITS ══ */}
       <section className="benefits-section">
         <div className="benefits-inner">
-          <div className="benefits-left">
+          <div
+            ref={benLeftRef}
+            className="benefits-left"
+            style={revealStyle(benLeftIn, 'slideRight')}
+          >
             <span className="section-eyebrow light">OUR BENEFITS</span>
             <h2 className="benefits-title">Productivity & Support Are Perfectly Combined Here!</h2>
             <p className="benefits-desc">
@@ -387,13 +511,18 @@ const Contact = () => {
             </p>
             <a href="#contact-form" className="btn-white">CONTACT SUPPORT</a>
           </div>
-          <div className="benefits-right">
+
+          <div className="benefits-right" ref={benRightRef}>
             {[
               { icon: <HiLightningBolt style={{ width: 22, height: 22 }} />, title: 'Instant Notifications', desc: 'Real-time alerts for task updates, deadlines, and team mentions.' },
               { icon: <HiShieldCheck   style={{ width: 22, height: 22 }} />, title: 'Enterprise-Grade Security', desc: 'Your data is encrypted end-to-end. SOC 2 compliant, always.' },
               { icon: <HiChat          style={{ width: 22, height: 22 }} />, title: 'Dedicated Account Manager', desc: 'Enterprise clients get a personal manager for onboarding & support.' },
             ].map((b, i) => (
-              <div key={i} className="benefit-card anim-fadeIn" style={{ animationDelay: `${i * 120}ms` }}>
+              <div
+                key={i}
+                className="benefit-card"
+                style={revealStyle(benVisible[i], 'slideUp', i * 80)}
+              >
                 <div className="benefit-icon">{b.icon}</div>
                 <div>
                   <h4 className="benefit-title">{b.title}</h4>
@@ -405,19 +534,20 @@ const Contact = () => {
         </div>
       </section>
 
-      {/* ══ MAP ═══════════════════════════════════════════ */}
-      <section className="map-section">
-        <iframe
-          title="TaskFlow Office Location"
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d19862.59735854507!2d-0.12983289999999999!3d51.50244!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47d8a00baf21de75%3A0x52963a5addd52a99!2sLondon%2C%20UK!5e0!3m2!1sen!2sin!4v1680000000000!5m2!1sen!2sin"
-          className="map-iframe"
-          allowFullScreen=""
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-        />
-      </section>
+      {/* ══ MAP ══ */}
+      <div ref={mapRef} style={revealStyle(mapIn, 'fadeIn')}>
+        <section className="map-section">
+          <iframe
+            title="TaskFlow Office Location"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d19862.59735854507!2d-0.12983289999999999!3d51.50244!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47d8a00baf21de75%3A0x52963a5addd52a99!2sLondon%2C%20UK!5e0!3m2!1sen!2sin!4v1680000000000!5m2!1sen!2sin"
+            className="map-iframe"
+            allowFullScreen=""
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
+        </section>
+      </div>
 
-      {/* ══ STYLES ══════════════════════════════════════ */}
       <style jsx>{`
         :root {
           --plum:    #49225B;
@@ -428,25 +558,20 @@ const Contact = () => {
           --body-bg: #f9f6fc;
         }
 
+        /* ── Scroll-reveal base ── */
+        .reveal-base {
+          transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
         .page-root {
           width: 100%;
           background: var(--white);
           overflow-x: hidden;
           font-family: 'Segoe UI', system-ui, sans-serif;
         }
-        * {
-  backface-visibility: hidden;
-  transform: translateZ(0);
-}
 
-        /* ── HERO ──────────────────────────────────────────
-         * min-height: 660px  — taller than before (was 520px)
-         *   gives the navbar visible sky above the content
-         *
-         * hero-inner padding-top: 160px
-         *   = navbar height (~64px) + top gap (~16px) + 80px breathing room
-         *   so the text/vector sits comfortably below the pill
-         * ─────────────────────────────────────────────────*/
+        /* ── HERO ── */
         .hero {
           width: 100%;
           min-height: 660px;
@@ -457,19 +582,12 @@ const Contact = () => {
           align-items: center;
           justify-content: center;
         }
-        .hero-bg-blob {
-          position: absolute;
-          border-radius: 50%;
-          background: rgba(255,255,255,0.06);
-        }
+        .hero-bg-blob { position: absolute; border-radius: 50%; background: rgba(255,255,255,0.06); }
         .blob1 { width: 500px; height: 500px; top: -150px; left: -100px; }
         .blob2 { width: 360px; height: 360px; bottom: -100px; right: 60px; }
-
         .hero-inner {
           max-width: 1200px;
           width: 100%;
-          /* top: 160px clears the floating navbar + gives breathing room */
-          /* bottom: 120px ensures wave doesn't overlap content           */
           padding: 160px 40px 120px;
           display: flex;
           align-items: center;
@@ -478,203 +596,78 @@ const Contact = () => {
           position: relative;
           z-index: 2;
         }
-        .hero-left {
-          flex: 1 1 340px;
-           max-width: 520px;
-  
-         }
-        
-        .hero-right {
-         flex: 1 1 340px;
-         max-width: 600px;
-         display: flex;
-         justify-content: center;
-         }
-
-         .hero-right svg {
-          width: 100%;
-          max-width: 600px;
-         }
+        .hero-left  { flex: 1 1 340px; max-width: 520px; }
+        .hero-right { flex: 1 1 340px; max-width: 600px; display: flex; justify-content: center; }
+        .hero-right svg { width: 100%; max-width: 600px; }
         .hero-eyebrow {
-          display: inline-block;
-          font-size: 0.7rem;
-          font-weight: 700;
-          letter-spacing: 0.2em;
-          color: var(--lavender);
-          text-transform: uppercase;
-          margin-bottom: 14px;
+          display: inline-block; font-size: 0.7rem; font-weight: 700;
+          letter-spacing: 0.2em; color: var(--lavender); text-transform: uppercase; margin-bottom: 14px;
         }
-        .hero-title {
-        font-size: clamp(1.8rem, 3.5vw, 2.8rem);
-         font-weight: 900;
-         color: var(--white);
-         line-height: 1.22;
-         margin: 0 0 14px;
-         max-width: 520px; /* controls breaking */
-        }
+        .hero-title { font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 900; color: var(--white); line-height: 1.22; margin: 0 0 14px; max-width: 520px; }
         .hero-title-accent { color: var(--lavender); }
-        .hero-desc {
-          font-size: 0.96rem;
-          color: rgba(231,219,239,0.85);
-          line-height: 1.55;
-          margin: 0 0 28px;
-          max-width: 520px;
-        }
-        .hero-stats {
-          display: flex;
-          align-items: center;
-          gap: 24px;
-          margin-bottom: 32px;
-        }
-        .hero-stat-num {
-          display: block;
-          font-size: 1.8rem;
-          font-weight: 900;
-          color: var(--white);
-          line-height: 1;
-        }
-        .hero-stat-label {
-          font-size: 0.75rem;
-          color: var(--lavender);
-          margin-top: 4px;
-          display: block;
-        }
-        .hero-stat-divider {
-          width: 1px;
-          height: 44px;
-          background: rgba(231,219,239,0.3);
-        }
+        .hero-desc { font-size: 0.96rem; color: rgba(231,219,239,0.85); line-height: 1.55; margin: 0 0 28px; max-width: 520px; }
+        .hero-stats { display: flex; align-items: center; gap: 24px; margin-bottom: 32px; }
+        .hero-stat-num { display: block; font-size: 1.8rem; font-weight: 900; color: var(--white); line-height: 1; }
+        .hero-stat-label { font-size: 0.75rem; color: var(--lavender); margin-top: 4px; display: block; }
+        .hero-stat-divider { width: 1px; height: 44px; background: rgba(231,219,239,0.3); }
         .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
         .btn-primary {
-          display: inline-block;
-          background: var(--white);
-          color: var(--plum);
-          font-weight: 800;
-          font-size: 0.82rem;
-          letter-spacing: 0.1em;
-          padding: 13px 30px;
-          border-radius: 9999px;
-          text-decoration: none;
-          transition: all 0.25s ease;
-          box-shadow: 0 4px 20px rgba(73,34,91,0.3);
-          white-space: nowrap;
+          display: inline-block; background: var(--white); color: var(--plum);
+          font-weight: 800; font-size: 0.82rem; letter-spacing: 0.1em;
+          padding: 13px 30px; border-radius: 9999px; text-decoration: none;
+          transition: all 0.25s ease; box-shadow: 0 4px 20px rgba(73,34,91,0.3); white-space: nowrap;
         }
-        .btn-primary:hover {
-          background: var(--lavender);
-          transform: translateY(-2px);
-          box-shadow: 0 8px 28px rgba(73,34,91,0.4);
-        }
+        .btn-primary:hover { background: var(--lavender); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(73,34,91,0.4); }
         .btn-outline {
-          display: inline-block;
-          background: transparent;
-          color: var(--white);
-          font-weight: 700;
-          font-size: 0.82rem;
-          letter-spacing: 0.1em;
-          padding: 12px 28px;
-          border-radius: 9999px;
-          border: 2px solid rgba(255,255,255,0.5);
-          text-decoration: none;
-          transition: all 0.25s ease;
-          white-space: nowrap;
+          display: inline-block; background: transparent; color: var(--white);
+          font-weight: 700; font-size: 0.82rem; letter-spacing: 0.1em;
+          padding: 12px 28px; border-radius: 9999px; border: 2px solid rgba(255,255,255,0.5);
+          text-decoration: none; transition: all 0.25s ease; white-space: nowrap;
         }
-        .btn-outline:hover {
-          border-color: var(--white);
-          background: rgba(255,255,255,0.1);
-          transform: translate3d(0, -2px, 0);
-          will-change: transform;
-        }
-        .hero-wave {
-          position: absolute;
-          bottom: -2px; left: 0; width: 100%;
-          line-height: 0; z-index: 3;
-        }
+        .btn-outline:hover { border-color: var(--white); background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+        .hero-wave { position: absolute; bottom: -2px; left: 0; width: 100%; line-height: 0; z-index: 3; }
         .hero-wave svg { display: block; width: 100%; height: 90px; }
 
         /* ── ABOUT ── */
         .about-section { background: var(--white); padding: 80px 0 0; }
         .about-inner {
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 0 40px 60px;
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 60px;
-          align-items: center;
+          max-width: 1200px; margin: 0 auto; padding: 0 40px 60px;
+          display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
         }
         .about-img-card {
           background: linear-gradient(135deg, var(--lavender), #f5eff9);
-          border-radius: 24px;
-          padding: 32px 24px 0;
-          position: relative;
-          overflow: hidden;
-          border: 1.5px solid var(--lavender);
+          border-radius: 24px; padding: 32px 24px 0;
+          position: relative; overflow: hidden; border: 1.5px solid var(--lavender);
         }
         .about-img-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          background: var(--purple);
-          color: var(--white);
-          font-size: 0.78rem;
-          font-weight: 700;
-          padding: 7px 14px;
-          border-radius: 9999px;
-          margin-bottom: 20px;
+          display: inline-flex; align-items: center; gap: 6px;
+          background: var(--purple); color: var(--white);
+          font-size: 0.78rem; font-weight: 700; padding: 7px 14px; border-radius: 9999px; margin-bottom: 20px;
         }
         .section-eyebrow {
-          display: block;
-          font-size: 0.7rem;
-          font-weight: 700;
-          letter-spacing: 0.2em;
-          color: var(--purple);
-          text-transform: uppercase;
-          margin-bottom: 12px;
+          display: block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em;
+          color: var(--purple); text-transform: uppercase; margin-bottom: 12px;
         }
         .section-eyebrow.centered { text-align: center; }
         .section-eyebrow.light { color: var(--lavender); }
-        .section-title {
-          font-size: clamp(1.6rem, 2.8vw, 2.4rem);
-          font-weight: 900;
-          color: var(--plum);
-          margin: 0 0 16px;
-          line-height: 1.2;
-        }
+        .section-title { font-size: clamp(1.6rem, 2.8vw, 2.4rem); font-weight: 900; color: var(--plum); margin: 0 0 16px; line-height: 1.2; }
         .section-title.centered { text-align: center; }
-        .section-desc {
-          font-size: 0.94rem;
-          color: #6b5a75;
-          line-height: 1.75;
-          margin: 0 0 20px;
-        }
+        .section-desc { font-size: 0.94rem; color: #6b5a75; line-height: 1.75; margin: 0 0 20px; }
         .section-desc.centered { text-align: center; }
         .about-contact-row { margin: 24px 0 16px; }
         .about-contact-pill {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          background: var(--lavender);
-          color: var(--plum);
-          font-size: 0.82rem;
-          font-weight: 600;
-          padding: 10px 18px;
-          border-radius: 9999px;
+          display: inline-flex; align-items: center; gap: 8px;
+          background: var(--lavender); color: var(--plum);
+          font-size: 0.82rem; font-weight: 600; padding: 10px 18px; border-radius: 9999px;
         }
         .about-contact-details { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
         .about-phone { font-size: 1.4rem; font-weight: 900; color: var(--plum); }
         .btn-small {
-          display: inline-block;
-          background: var(--purple);
-          color: var(--white);
-          font-weight: 700;
-          font-size: 0.78rem;
-          letter-spacing: 0.1em;
-          padding: 10px 22px;
-          border-radius: 9999px;
-          text-decoration: none;
-          transition: all 0.25s ease;
+          display: inline-block; background: var(--purple); color: var(--white);
+          font-weight: 700; font-size: 0.78rem; letter-spacing: 0.1em;
+          padding: 10px 22px; border-radius: 9999px; text-decoration: none; transition: all 0.25s ease;
         }
-        .btn-small:hover { background: var(--plum); transform: translate3d(0, -2px, 0); will-change: transform;; }
+        .btn-small:hover { background: var(--plum); transform: translateY(-2px); }
 
         /* ── WAVE dividers ── */
         .section-wave-down { line-height: 0; background: var(--white); }
@@ -687,61 +680,41 @@ const Contact = () => {
         .services-inner { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
         .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
         .service-card {
-          background: var(--white);
-          border-radius: 20px;
-          padding: 32px 28px;
-          border: 1.5px solid #d8c8e4;
+          background: var(--white); border-radius: 20px; padding: 32px 28px;
+          border: 1.5px solid #d8c8e4; cursor: default;
           transition: transform 0.25s ease, box-shadow 0.25s ease;
-          cursor: default;
         }
-        .service-card:hover { transform: translate3d(0, -6px, 0); will-change: transform; box-shadow: 0 16px 48px rgba(110,52,130,0.16); }
+        .service-card:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(110,52,130,0.16); }
         .service-icon { margin-bottom: 20px; }
         .service-title { font-size: 1.05rem; font-weight: 800; color: var(--plum); margin: 0 0 12px; }
-        .service-desc { font-size: 0.87rem; color: #7a6685; line-height: 1.7; margin: 0 0 16px; }
+        .service-desc  { font-size: 0.87rem; color: #7a6685; line-height: 1.7; margin: 0 0 16px; }
         .service-tag {
-          display: inline-block;
-          background: var(--lavender);
-          color: var(--purple);
-          font-size: 0.75rem;
-          font-weight: 700;
-          padding: 5px 12px;
-          border-radius: 9999px;
+          display: inline-block; background: var(--lavender); color: var(--purple);
+          font-size: 0.75rem; font-weight: 700; padding: 5px 12px; border-radius: 9999px;
         }
 
-        /* ── MAIN CONTACT SECTION ── */
+        /* ── CONTACT SECTION ── */
         .main-section { background: var(--body-bg); padding: 80px 0; }
         .main-inner {
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 0 40px;
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 52px;
-          align-items: start;
+          max-width: 1200px; margin: 0 auto; padding: 0 40px;
+          display: grid; grid-template-columns: 1fr 1fr; gap: 52px; align-items: start;
         }
         .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 32px; }
-        .info-card { display: flex; align-items: flex-start; gap: 12px; cursor: default; transition: transform 0.2s ease; }
-        .info-card:hover { transform: translate3d(0, 4px, 0); will-change: transform; }
+        .info-card { display: flex; align-items: flex-start; gap: 12px; cursor: default; }
         .info-icon-wrap {
-          width: 46px; height: 46px;
-          border-radius: 12px;
+          width: 46px; height: 46px; border-radius: 12px;
           background: linear-gradient(135deg, var(--lavender), #e0cceb);
           border: 1.5px solid #d0bedd;
-          display: flex; align-items: center; justify-content: center;
-          flex-shrink: 0;
+          display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         }
         .info-icon { width: 20px; height: 20px; color: var(--purple); }
         .info-label { font-weight: 700; color: var(--plum); font-size: 0.85rem; margin: 0 0 3px; }
         .info-value { color: #7a6685; font-size: 0.8rem; margin: 0; line-height: 1.5; }
         .hours-card {
           background: linear-gradient(135deg, var(--plum) 0%, var(--purple) 100%);
-          border-radius: 18px;
-          padding: 28px;
-          color: var(--white);
-          position: relative;
-          overflow: hidden;
-          box-shadow: 0 12px 40px rgba(73,34,91,0.3);
-          margin-bottom: 20px;
+          border-radius: 18px; padding: 28px; color: var(--white);
+          position: relative; overflow: hidden;
+          box-shadow: 0 12px 40px rgba(73,34,91,0.3); margin-bottom: 20px;
         }
         .hours-orb { position: absolute; border-radius: 50%; background: rgba(255,255,255,0.08); }
         .orb1 { width: 120px; height: 120px; top: -40px; right: -40px; }
@@ -749,48 +722,36 @@ const Contact = () => {
         .hours-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
         .hours-title { font-size: 1.05rem; font-weight: 800; margin: 0; }
         .hours-row {
-          display: flex;
-          justify-content: space-between;
-          font-size: 0.88rem;
-          color: rgba(231,219,239,0.85);
-          padding: 5px 0;
-          border-bottom: 1px solid rgba(165,106,189,0.2);
+          display: flex; justify-content: space-between;
+          font-size: 0.88rem; color: rgba(231,219,239,0.85);
+          padding: 5px 0; border-bottom: 1px solid rgba(165,106,189,0.2);
         }
         .hours-row:last-of-type { border-bottom: none; }
         .hours-value { font-weight: 700; color: var(--lilac); }
         .hours-note { margin: 16px 0 0; font-size: 0.8rem; color: rgba(231,219,239,0.65); line-height: 1.6; }
         .quick-card {
-          background: var(--white);
-          border-radius: 14px;
-          padding: 18px 22px;
+          background: var(--white); border-radius: 14px; padding: 18px 22px;
           border: 1.5px solid #d8c8e4;
           display: flex; align-items: center; gap: 14px;
           transition: transform 0.25s, box-shadow 0.25s;
         }
-        .quick-card:hover { transform: translate3d(0, -2px, 0); will-change: transform; box-shadow: 0 8px 24px rgba(110,52,130,0.12); }
+        .quick-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(110,52,130,0.12); }
         .quick-icon-wrap {
           width: 48px; height: 48px;
           background: linear-gradient(135deg, var(--lavender), #e0cceb);
-          border-radius: 50%;
-          display: flex; align-items: center; justify-content: center;
-          flex-shrink: 0;
+          border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         }
         .quick-text { font-size: 0.9rem; color: #7a6685; margin: 0; }
         .quick-hl { font-weight: 800; color: var(--purple); }
         .form-card {
-          background: var(--white);
-          border-radius: 22px;
-          padding: 36px 40px 44px;
-          border: 1.5px solid #d8c8e4;
-          box-shadow: 0 20px 60px rgba(73,34,91,0.10);
-          position: relative;
-          overflow: hidden;
+          background: var(--white); border-radius: 22px; padding: 36px 40px 44px;
+          border: 1.5px solid #d8c8e4; box-shadow: 0 20px 60px rgba(73,34,91,0.10);
+          position: relative; overflow: hidden;
           transition: box-shadow 0.3s, transform 0.3s;
         }
-        .form-card:hover { box-shadow: 0 28px 72px rgba(73,34,91,0.16); transform: translate3d(0, -2px, 0); will-change: transform; }
+        .form-card:hover { box-shadow: 0 28px 72px rgba(73,34,91,0.16); transform: translateY(-2px); }
         .form-accent-bar {
-          position: absolute; top: 0; left: 0; right: 0;
-          height: 4px;
+          position: absolute; top: 0; left: 0; right: 0; height: 4px;
           background: linear-gradient(90deg, var(--plum), var(--purple), var(--lilac));
         }
         .form-title { font-size: 1.75rem; font-weight: 900; color: var(--plum); margin: 0 0 8px; }
@@ -798,165 +759,85 @@ const Contact = () => {
         .form-sub { font-size: 0.88rem; color: #7a6685; margin: 0 0 24px; line-height: 1.6; }
         .form-body { display: flex; flex-direction: column; gap: 14px; }
         .form-input {
-          width: 100%;
-          background: var(--lavender);
-          color: var(--plum);
-          padding: 13px 16px;
-          border-radius: 10px;
-          font-size: 0.9rem;
-          outline: none;
-          border: 1.5px solid #d0bedd;
-          transition: all 0.25s ease;
-          box-sizing: border-box;
-          font-family: inherit;
+          width: 100%; background: var(--lavender); color: var(--plum);
+          padding: 13px 16px; border-radius: 10px; font-size: 0.9rem;
+          outline: none; border: 1.5px solid #d0bedd;
+          transition: all 0.25s ease; box-sizing: border-box; font-family: inherit;
         }
         .form-input::placeholder { color: #a98db5; }
         .form-input:hover { border-color: var(--lilac); }
         .form-input.focused {
-          border-color: var(--purple);
-          box-shadow: 0 0 0 3px rgba(110,52,130,0.14);
+          border-color: var(--purple); box-shadow: 0 0 0 3px rgba(110,52,130,0.14);
           background: var(--white);
-          // transform: scale(1.01);
         }
         .form-textarea { resize: none; }
         .submit-btn {
           background: linear-gradient(90deg, var(--plum), var(--purple));
-          color: var(--white);
-          font-weight: 800;
-          font-size: 0.86rem;
-          letter-spacing: 0.1em;
-          padding: 14px 36px;
-          border-radius: 10px;
-          border: none;
-          cursor: pointer;
-          transition: all 0.25s ease;
-          width: fit-content;
+          color: var(--white); font-weight: 800; font-size: 0.86rem; letter-spacing: 0.1em;
+          padding: 14px 36px; border-radius: 10px; border: none; cursor: pointer;
+          transition: all 0.25s ease; width: fit-content;
           box-shadow: 0 4px 16px rgba(73,34,91,0.35);
         }
-        .submit-btn:hover {
-          background: linear-gradient(90deg, var(--purple), var(--lilac));
-          transform: scale(1.03);
-          box-shadow: 0 8px 24px rgba(110,52,130,0.45);
-        }
+        .submit-btn:hover { background: linear-gradient(90deg, var(--purple), var(--lilac)); transform: scale(1.03); box-shadow: 0 8px 24px rgba(110,52,130,0.45); }
         .success-msg {
           display: flex; align-items: center; gap: 8px;
-          color: #4a1a5f;
-          background: var(--lavender);
-          border: 1px solid var(--lilac);
-          padding: 12px 16px;
-          border-radius: 10px;
-          font-size: 0.88rem;
+          color: #4a1a5f; background: var(--lavender);
+          border: 1px solid var(--lilac); padding: 12px 16px;
+          border-radius: 10px; font-size: 0.88rem;
         }
 
         /* ── BENEFITS ── */
         .benefits-section { background: linear-gradient(135deg, var(--plum), var(--purple)); padding: 80px 0; }
         .benefits-inner {
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 0 40px;
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 60px;
-          align-items: center;
+          max-width: 1200px; margin: 0 auto; padding: 0 40px;
+          display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
         }
         .benefits-title { font-size: clamp(1.6rem, 2.5vw, 2.2rem); font-weight: 900; color: var(--white); margin: 0 0 16px; line-height: 1.2; }
         .benefits-desc { font-size: 0.93rem; color: rgba(231,219,239,0.8); line-height: 1.75; margin: 0 0 28px; }
         .btn-white {
-          display: inline-block;
-          background: var(--white);
-          color: var(--plum);
-          font-weight: 800;
-          font-size: 0.82rem;
-          letter-spacing: 0.1em;
-          padding: 13px 30px;
-          border-radius: 9999px;
-          text-decoration: none;
-          transition: all 0.25s ease;
+          display: inline-block; background: var(--white); color: var(--plum);
+          font-weight: 800; font-size: 0.82rem; letter-spacing: 0.1em;
+          padding: 13px 30px; border-radius: 9999px; text-decoration: none; transition: all 0.25s ease;
         }
-        .btn-white:hover { background: var(--lavender); transform: translate3d(0, -2px, 0); will-change: transform; }
+        .btn-white:hover { background: var(--lavender); transform: translateY(-2px); }
         .benefit-card {
           display: flex; align-items: flex-start; gap: 16px;
-          background: rgba(255,255,255,0.1);
-          border-radius: 14px;
-          padding: 20px 22px;
-          border: 1px solid rgba(165,106,189,0.3);
-          margin-bottom: 16px;
+          background: rgba(255,255,255,0.1); border-radius: 14px; padding: 20px 22px;
+          border: 1px solid rgba(165,106,189,0.3); margin-bottom: 16px;
           transition: background 0.25s, transform 0.25s;
         }
         .benefit-card:last-child { margin-bottom: 0; }
-        .benefit-card:hover { background: rgba(255,255,255,0.16); transform: translate3d(0, -4px, 0);
-will-change: transform;; }
+        .benefit-card:hover { background: rgba(255,255,255,0.16); transform: translateY(-4px); }
         .benefit-icon {
-          width: 44px; height: 44px;
-          background: rgba(165,106,189,0.3);
-          border-radius: 10px;
-          display: flex; align-items: center; justify-content: center;
+          width: 44px; height: 44px; background: rgba(165,106,189,0.3);
+          border-radius: 10px; display: flex; align-items: center; justify-content: center;
           color: var(--lavender); flex-shrink: 0;
         }
         .benefit-title { font-size: 0.95rem; font-weight: 800; color: var(--white); margin: 0 0 5px; }
-        .benefit-desc { font-size: 0.83rem; color: rgba(231,219,239,0.75); margin: 0; line-height: 1.5; }
+        .benefit-desc  { font-size: 0.83rem; color: rgba(231,219,239,0.75); margin: 0; line-height: 1.5; }
 
         /* ── MAP ── */
         .map-section { width: 100%; height: 420px; overflow: hidden; }
         .map-iframe { width: 100%; height: 100%; border: none; display: block; }
 
-        /* ── ANIMATIONS ── */
-        @keyframes float1 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        @keyframes float2 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
-        @keyframes float3 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-        @keyframes slideUp    { from { opacity:0; transform:translateY(28px); }  to { opacity:1; transform:translateY(0); } }
-        @keyframes slideRight { from { opacity:0; transform:translateX(-24px); } to { opacity:1; transform:translateX(0); } }
-        @keyframes scaleIn    { from { opacity:0; transform:scale(0.9); }         to { opacity:1; transform:scale(1); } }
-        @keyframes fadeIn     { from { opacity:0; }                                to { opacity:1; } }
-        .anim-slideUp   { animation: slideUp   0.6s ease-out both; }
-        .anim-slideRight{ animation: slideRight 0.55s ease-out both; }
-        .anim-scaleIn   { animation: scaleIn   0.5s cubic-bezier(0.34,1.56,0.64,1) both; }
-        .anim-fadeIn    { animation: fadeIn    0.5s ease-out both; }
-        .anim-slideUp,
-        .anim-slideRight,
-        .anim-scaleIn {
-        will-change: transform, opacity;
-        }
+        /* ── SVG float animations ── */
+        @keyframes float1 { 0%,100% { transform: translateY(0); }  50% { transform: translateY(-10px); } }
+        @keyframes float2 { 0%,100% { transform: translateY(0); }  50% { transform: translateY(-14px); } }
+        @keyframes float3 { 0%,100% { transform: translateY(0); }  50% { transform: translateY(-8px); }  }
 
         /* ── RESPONSIVE ── */
         @media (max-width: 900px) {
-          .hero {
-            min-height: 600px;
-          }
-          .hero-inner {
-            /* Slightly less padding on tablet since navbar shrinks a touch */
-            padding: 140px 24px 110px;
-            flex-direction: column;
-            gap: 32px;
-          }
-          .about-inner, .main-inner, .benefits-inner {
-            grid-template-columns: 1fr;
-            padding-left: 24px;
-            padding-right: 24px;
-          }
+          .hero { min-height: 600px; }
+          .hero-inner { padding: 140px 24px 110px; flex-direction: column; gap: 32px; }
+          .about-inner, .main-inner, .benefits-inner { grid-template-columns: 1fr; padding-left: 24px; padding-right: 24px; }
           .services-grid { grid-template-columns: 1fr; }
           .info-grid { grid-template-columns: 1fr 1fr; }
         }
-
         @media (max-width: 540px) {
-          .hero {
-            min-height: 560px;
-          }
-          .hero-inner {
-            padding: 120px 20px 100px;
-            gap: 24px;
-          }
-          .hero-actions {
-            flex-direction: row;
-            flex-wrap: wrap;
-            gap: 12px;
-          }
-          .btn-primary, .btn-outline {
-            flex: 1 1 auto;
-            text-align: center;
-            padding: 13px 16px;
-            font-size: 0.78rem;
-          }
+          .hero { min-height: 560px; }
+          .hero-inner { padding: 120px 20px 100px; gap: 24px; }
+          .hero-actions { flex-direction: row; flex-wrap: wrap; gap: 12px; }
+          .btn-primary, .btn-outline { flex: 1 1 auto; text-align: center; padding: 13px 16px; font-size: 0.78rem; }
           .info-grid { grid-template-columns: 1fr; }
           .form-card { padding: 28px 20px 36px; }
         }
@@ -964,5 +845,28 @@ will-change: transform;; }
     </div>
   );
 };
+
+/* ─────────────────────────────────────────────
+   Helper — returns inline style object for each
+   animation variant based on `inView` state.
+   `delay` is in ms.
+───────────────────────────────────────────── */
+function revealStyle(inView, variant = 'fadeIn', delay = 0) {
+  const base = {
+    transition: `opacity 0.72s cubic-bezier(0.22,1,0.36,1) ${delay}ms, transform 0.72s cubic-bezier(0.22,1,0.36,1) ${delay}ms`,
+  };
+
+  const hidden = {
+    slideUp:    { opacity: 0, transform: 'translateY(40px)' },
+    slideRight: { opacity: 0, transform: 'translateX(-40px)' },
+    scaleIn:    { opacity: 0, transform: 'scale(0.88)' },
+    fadeIn:     { opacity: 0, transform: 'none' },
+    fadeUp:     { opacity: 0, transform: 'translateY(24px)' },
+  };
+
+  const visible = { opacity: 1, transform: 'none' };
+
+  return { ...base, ...(inView ? visible : hidden[variant] ?? hidden.fadeIn) };
+}
 
 export default Contact;
